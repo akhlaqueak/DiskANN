@@ -6,6 +6,7 @@
 
 namespace diskann
 {
+    
 InMemGraphStore::InMemGraphStore(const size_t total_pts, const size_t reserve_graph_degree)
     : AbstractGraphStore(total_pts, reserve_graph_degree)
 {

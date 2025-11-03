@@ -808,6 +808,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
     InMemQueryScratch<T> *scratch, const uint32_t Lsize, const std::vector<uint32_t> &init_ids, bool use_filter,
     const std::vector<LabelT> &filter_labels, bool search_invocation)
 {
+    // search_invocation=false when building index
     std::vector<Neighbor> &expanded_nodes = scratch->pool();
     NeighborPriorityQueue &best_L_nodes = scratch->best_l_nodes();
     best_L_nodes.reserve(Lsize);
@@ -843,6 +844,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         }
     }
 
+    // AK: checks visited either in bitset or robinset, depeding on fast_iterate
     // Lambda to determine if a node has been visited
     auto is_not_visited = [this, fast_iterate, &inserted_into_pool_bs, &inserted_into_pool_rs](const uint32_t id) {
         return fast_iterate ? inserted_into_pool_bs[id] == 0
@@ -996,11 +998,13 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
                                                         InMemQueryScratch<T> *scratch, bool use_filter,
                                                         uint32_t filteredLindex)
 {
+    // AK: get_init_ids return the frozen points, in simple case it's the starting point...
     const std::vector<uint32_t> init_ids = get_init_ids();
     const std::vector<LabelT> unused_filter_label;
 
     if (!use_filter)
     {
+        // AK: not using filter
         _data_store->get_vector(location, scratch->aligned_query());
         iterate_to_fixed_point(scratch, Lindex, init_ids, false, unused_filter_label, false);
     }
@@ -1015,7 +1019,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
 
         if (_dynamic_index)
             tl.unlock();
-
+        // AK: copy the location vector to scratch
         _data_store->get_vector(location, scratch->aligned_query());
         iterate_to_fixed_point(scratch, filteredLindex, filter_specific_start_nodes, true,
                                _location_to_labels[location], false);
@@ -1047,7 +1051,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     }
 
     auto &pool = scratch->pool();
-
+    // AK: remove v from pool 
     for (uint32_t i = 0; i < pool.size(); i++)
     {
         if (pool[i].id == (uint32_t)location)
@@ -1883,7 +1887,8 @@ void Index<T, TagT, LabelT>::build_filtered_index(const char *filename, const st
                                          // the points to label mapping
 
     std::unordered_map<LabelT, std::vector<uint32_t>> label_to_points;
-
+    // AK: this code is implementation of Algo 2 of the paper..
+    // this loop finds Pf
     for (uint32_t point_id = 0; point_id < num_points_to_load; point_id++)
     {
         for (auto label : _location_to_labels[point_id])
@@ -1905,6 +1910,7 @@ void Index<T, TagT, LabelT>::build_filtered_index(const char *filename, const st
         }
     }
 
+    // this loop as the one shown in Algo 2 of the paper, num_cands is \tau 
     uint32_t num_cands = 25;
     for (auto itr = _labels.begin(); itr != _labels.end(); itr++)
     {
