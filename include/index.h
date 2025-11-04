@@ -410,6 +410,10 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     bool _pq_generated = false;
     FixedChunkPQTable _pq_table;
 
+    // fm: adding stuff for filtered work
+    bool _model_stage = true;
+    // fm: -----------------------------
+
     //
     // Data structures, locks and flags for dynamic indexing and tags
     //

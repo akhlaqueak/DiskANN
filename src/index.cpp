@@ -998,7 +998,8 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
                                                         InMemQueryScratch<T> *scratch, bool use_filter,
                                                         uint32_t filteredLindex)
 {
-    // AK: get_init_ids return the frozen points, in simple case it's the starting point...
+    // AK: if it's not a filtered index use_filter=false, filteredLindex=0
+    // AK: get_init_ids return the frozen points, in simple case it's the medoid...
     const std::vector<uint32_t> init_ids = get_init_ids();
     const std::vector<LabelT> unused_filter_label;
 
@@ -1021,19 +1022,22 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
             tl.unlock();
         // AK: copy the location vector to scratch
         _data_store->get_vector(location, scratch->aligned_query());
+        // AK: note filtere_specific_start_nodes instead of init_ids
         iterate_to_fixed_point(scratch, filteredLindex, filter_specific_start_nodes, true,
                                _location_to_labels[location], false);
 
         // combine candidate pools obtained with filter and unfiltered criteria.
+        // AK: copy pool to best_candidate_pool... 
         std::set<Neighbor> best_candidate_pool;
         for (auto filtered_neighbor : scratch->pool())
         {
             best_candidate_pool.insert(filtered_neighbor);
         }
-
+        
         // clear scratch for finding unfiltered candidates
         scratch->clear();
-
+        
+        // AK: now find pool with unfiltered criteria... 
         _data_store->get_vector(location, scratch->aligned_query());
         iterate_to_fixed_point(scratch, Lindex, init_ids, false, unused_filter_label, false);
 
@@ -1295,8 +1299,6 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
 
     /* visit_order is a vector that is initialized to the entire graph */
     std::vector<uint32_t> visit_order;
-    std::vector<diskann::Neighbor> pool, tmp;
-    tsl::robin_set<uint32_t> visited;
     visit_order.reserve(_nd + _num_frozen_pts);
     for (uint32_t i = 0; i < (uint32_t)_nd; i++)
     {
@@ -2878,6 +2880,7 @@ int Index<T, TagT, LabelT>::insert_point(const T *point, const TagT tag)
 template <typename T, typename TagT, typename LabelT>
 int Index<T, TagT, LabelT>::insert_point(const T *point, const TagT tag, const std::vector<LabelT> &labels)
 {
+    // AK this function is inserting points after the index is built i.e. Fresh-DiskANN
 
     assert(_has_built);
     if (tag == 0)
