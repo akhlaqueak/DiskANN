@@ -785,7 +785,7 @@ bool Index<T, TagT, LabelT>::detect_common_filters(uint32_t point_id, bool searc
         }
     }
     // intersection empty; proceed to check the universal label logic
-    
+
     if (_use_universal_label)
     {
         if (!search_invocation)
@@ -1027,17 +1027,17 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
                                _location_to_labels[location], false);
 
         // combine candidate pools obtained with filter and unfiltered criteria.
-        // AK: copy pool to best_candidate_pool... 
+        // AK: copy pool to best_candidate_pool...
         std::set<Neighbor> best_candidate_pool;
         for (auto filtered_neighbor : scratch->pool())
         {
             best_candidate_pool.insert(filtered_neighbor);
         }
-        
+
         // clear scratch for finding unfiltered candidates
         scratch->clear();
-        
-        // AK: now find pool with unfiltered criteria... 
+
+        // AK: now find pool with unfiltered criteria...
         _data_store->get_vector(location, scratch->aligned_query());
         iterate_to_fixed_point(scratch, Lindex, init_ids, false, unused_filter_label, false);
 
@@ -1055,7 +1055,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     }
 
     auto &pool = scratch->pool();
-    // AK: remove v from pool 
+    // AK: remove v from pool
     for (uint32_t i = 0; i < pool.size(); i++)
     {
         if (pool[i].id == (uint32_t)location)
@@ -1130,7 +1130,7 @@ void Index<T, TagT, LabelT>::occlude_list(const uint32_t location, std::vector<N
                     continue;
 
                 bool prune_allowed = true;
-                if (_filtered_index)
+                if (_filtered_index || (_trained_filtered_index&&_training_stage))
                 {
                     uint32_t a = iter->id;
                     uint32_t b = iter2->id;
@@ -1291,36 +1291,11 @@ void Index<T, TagT, LabelT>::inter_insert(uint32_t n, std::vector<uint32_t> &pru
     inter_insert(n, pruned_list, _indexingRange, scratch);
 }
 
-template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT>::link()
+template <typename T, typename TagT, typename LabelT>
+void Index<T, TagT, LabelT>::link_points(std::vector<uint32_t> &visit_order, uint32_t st, uint32_t en)
 {
-    uint32_t num_threads = _indexingThreads;
-    if (num_threads != 0)
-        omp_set_num_threads(num_threads);
-
-    /* visit_order is a vector that is initialized to the entire graph */
-    std::vector<uint32_t> visit_order;
-    visit_order.reserve(_nd + _num_frozen_pts);
-    for (uint32_t i = 0; i < (uint32_t)_nd; i++)
-    {
-        visit_order.emplace_back(i);
-    }
-
-    // If there are any frozen points, add them all.
-    for (uint32_t frozen = (uint32_t)_max_points; frozen < _max_points + _num_frozen_pts; frozen++)
-    {
-        visit_order.emplace_back(frozen);
-    }
-
-    // if there are frozen points, the first such one is set to be the _start
-    if (_num_frozen_pts > 0)
-        _start = (uint32_t)_max_points;
-    else
-        _start = calculate_entry_point();
-
-    diskann::Timer link_timer;
-
 #pragma omp parallel for schedule(dynamic, 2048)
-    for (int64_t node_ctr = 0; node_ctr < (int64_t)(visit_order.size()); node_ctr++)
+    for (int64_t node_ctr = st; node_ctr < (int64_t)(en); node_ctr++)
     {
         auto node = visit_order[node_ctr];
 
@@ -1328,7 +1303,7 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
         ScratchStoreManager<InMemQueryScratch<T>> manager(_query_scratch);
         auto scratch = manager.scratch_space();
         std::vector<uint32_t> pruned_list;
-        if (_filtered_index)
+        if (_filtered_index || (_trained_filtered_index && _training_stage))
         {
             search_for_point_and_prune(node, _indexingQueueSize, pruned_list, scratch, true, _filterIndexingQueueSize);
         }
@@ -1352,6 +1327,51 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
             diskann::cout << "\r" << (100.0 * node_ctr) / (visit_order.size()) << "% of index build completed."
                           << std::flush;
         }
+    }
+}
+
+template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT>::link()
+{
+    uint32_t num_threads = _indexingThreads;
+    if (num_threads != 0)
+        omp_set_num_threads(num_threads);
+
+    /* visit_order is a vector that is initialized to the entire graph */
+    std::vector<uint32_t> visit_order;
+    visit_order.reserve(_nd + _num_frozen_pts);
+    for (uint32_t i = 0; i < (uint32_t)_nd; i++)
+    {
+        visit_order.emplace_back(i);
+    }
+
+    // If there are any frozen points, add them all.
+    for (uint32_t frozen = (uint32_t)_max_points; frozen < _max_points + _num_frozen_pts; frozen++)
+    {
+        visit_order.emplace_back(frozen);
+    }
+    // Create a random seed
+    std::random_device rd;
+    std::mt19937 g(rd()); // Mersenne Twister engine
+
+    // Shuffle the vector
+    std::shuffle(visit_order.begin(), visit_order.end(), g);
+
+    // if there are frozen points, the first such one is set to be the _start
+    if (_num_frozen_pts > 0)
+        _start = (uint32_t)_max_points;
+    else
+        _start = calculate_entry_point();
+
+        diskann::Timer link_timer;
+    if(_trained_filtered_index){
+        uint32_t training_batch_size = 0.2 * visit_order.size();
+        _training_stage = true;
+        link_points(visit_order, 0, training_batch_size);
+        _training_stage = false;
+        link_points(visit_order, training_batch_size, visit_order.size());
+    }
+    else{
+        link_points(visit_order, 0, visit_order.size());
     }
 
     if (_nd > 0)
@@ -1912,7 +1932,7 @@ void Index<T, TagT, LabelT>::build_filtered_index(const char *filename, const st
         }
     }
 
-    // this loop as the one shown in Algo 2 of the paper, num_cands is \tau 
+    // this loop as the one shown in Algo 2 of the paper, num_cands is \tau
     uint32_t num_cands = 25;
     for (auto itr = _labels.begin(); itr != _labels.end(); itr++)
     {
