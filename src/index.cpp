@@ -1304,7 +1304,7 @@ void Index<T, TagT, LabelT>::link_points(std::vector<uint32_t> &visit_order, uin
         ScratchStoreManager<InMemQueryScratch<T>> manager(_query_scratch);
         auto scratch = manager.scratch_space();
         std::vector<uint32_t> pruned_list;
-        if (_filtered_index || (_trained_filtered_index && _training_stage))
+        if (_filtered_index || (_trained_filtered_index))
         {
             search_for_point_and_prune(node, _indexingQueueSize, pruned_list, scratch, true, _filterIndexingQueueSize);
         }
