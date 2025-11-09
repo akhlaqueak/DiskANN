@@ -12,11 +12,12 @@ const float ALPHA = 1.2f;
 const uint32_t NUM_THREADS = 0;
 const uint32_t MAX_OCCLUSION_SIZE = 750;
 const bool HAS_LABELS = false;
-const bool TRAINED_FILTERING = true;
 const uint32_t FILTER_LIST_SIZE = 0;
 const uint32_t NUM_FROZEN_POINTS_STATIC = 0;
 const uint32_t NUM_FROZEN_POINTS_DYNAMIC = 1;
-
+// AK trained filters parameters
+const bool TRAINED_FILTERING = true;
+const double TRAINING_BATCH_SIZE = 0.2; // batch size in percentage
 // In-mem index related limits
 const float GRAPH_SLACK_FACTOR = 1.3f;
 

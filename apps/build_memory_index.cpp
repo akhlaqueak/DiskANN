@@ -76,6 +76,7 @@ int main(int argc, char **argv)
         // Merge required and optional parameters
         desc.add(required_configs).add(optional_configs);
 
+
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
         if (vm.count("help"))
@@ -87,6 +88,8 @@ int main(int argc, char **argv)
         use_pq_build = (build_PQ_bytes > 0);
         use_opq = vm["use_opq"].as<bool>();
         trained_filtering = vm["trained_filtering"].as<bool>();
+        if(trained_filtering) cout<<"running with trained filters"<<endl;
+        else cout<<"Not using trained filters"<<endl;
     }
     catch (const std::exception &ex)
     {
