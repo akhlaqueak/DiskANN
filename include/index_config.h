@@ -125,7 +125,11 @@ class IndexConfigBuilder
         this->_use_opq = use_opq;
         return *this;
     }
-
+    IndexConfigBuilder &is_trained_filtering(bool trained_filtering)
+    {
+        this->_trained_filtering = trained_filtering;
+        return *this;
+    }
     IndexConfigBuilder &is_filtered(bool is_filtered)
     {
         this->_filtered_index = is_filtered;
@@ -242,6 +246,7 @@ class IndexConfigBuilder
     bool _concurrent_consolidate = false;
     bool _use_opq = false;
     bool _filtered_index{defaults::HAS_LABELS};
+    bool _trained_filtering=false;
 
     size_t _num_pq_chunks = 0;
     size_t _num_frozen_pts{defaults::NUM_FROZEN_POINTS_STATIC};

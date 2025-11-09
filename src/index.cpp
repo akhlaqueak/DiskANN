@@ -38,7 +38,8 @@ Index<T, TagT, LabelT>::Index(const IndexConfig &index_config, std::shared_ptr<A
       _enable_tags(index_config.enable_tags), _indexingMaxC(DEFAULT_MAXC), _query_scratch(nullptr),
       _pq_dist(index_config.pq_dist_build), _use_opq(index_config.use_opq),
       _filtered_index(index_config.filtered_index), _num_pq_chunks(index_config.num_pq_chunks),
-      _delete_set(new tsl::robin_set<uint32_t>), _conc_consolidate(index_config.concurrent_consolidate)
+      _delete_set(new tsl::robin_set<uint32_t>), _conc_consolidate(index_config.concurrent_consolidate),
+      _trained_filtered_index(index_config.trained_filtered_index)
 {
     if (_dynamic_index && !_enable_tags)
     {
@@ -808,7 +809,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
     InMemQueryScratch<T> *scratch, const uint32_t Lsize, const std::vector<uint32_t> &init_ids, bool use_filter,
     const std::vector<LabelT> &filter_labels, bool search_invocation)
 {
-    // search_invocation=false when building index
+    // AK: search_invocation=false when building index
     std::vector<Neighbor> &expanded_nodes = scratch->pool();
     NeighborPriorityQueue &best_L_nodes = scratch->best_l_nodes();
     best_L_nodes.reserve(Lsize);
@@ -1900,7 +1901,8 @@ template <typename T, typename TagT, typename LabelT>
 void Index<T, TagT, LabelT>::build_filtered_index(const char *filename, const std::string &label_file,
                                                   const size_t num_points_to_load, const std::vector<TagT> &tags)
 {
-    _filtered_index = true;
+    
+    // _filtered_index = true; // ak commented out
     _label_to_start_id.clear();
     size_t num_points_labels = 0;
 
