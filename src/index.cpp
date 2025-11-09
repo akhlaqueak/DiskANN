@@ -39,7 +39,7 @@ Index<T, TagT, LabelT>::Index(const IndexConfig &index_config, std::shared_ptr<A
       _pq_dist(index_config.pq_dist_build), _use_opq(index_config.use_opq),
       _filtered_index(index_config.filtered_index), _num_pq_chunks(index_config.num_pq_chunks),
       _delete_set(new tsl::robin_set<uint32_t>), _conc_consolidate(index_config.concurrent_consolidate),
-      _trained_filtered_index(index_config.trained_filtered_index)
+      _trained_filtered_index(index_config.trained_filtering)
 {
     if (_dynamic_index && !_enable_tags)
     {
