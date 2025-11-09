@@ -88,8 +88,8 @@ int main(int argc, char **argv)
         use_pq_build = (build_PQ_bytes > 0);
         use_opq = vm["use_opq"].as<bool>();
         trained_filtering = vm["trained_filtering"].as<bool>();
-        if(trained_filtering) cout<<"running with trained filters"<<endl;
-        else cout<<"Not using trained filters"<<endl;
+        if(trained_filtering) std::cout<<"running with trained filters"<<std::endl;
+        else std::cout<<"Not using trained filters"<<std::endl;
     }
     catch (const std::exception &ex)
     {
