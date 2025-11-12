@@ -83,7 +83,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                       .is_enable_tags(tags)
                       .is_concurrent_consolidate(false)
                       .is_pq_dist_build(false)
-                    .is_trained_filtering(trained_filtering)
+                    .is_trained_filtering(true) //todo pass it as parameter
                     .is_use_opq(false)
                       .with_num_pq_chunks(0)
                       .with_num_frozen_pts(num_frozen_pts)
