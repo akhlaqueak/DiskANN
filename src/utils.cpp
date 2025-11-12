@@ -236,7 +236,7 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
         while (counter<recall_at)
         {
             uint32_t v = res_vec[counter++];
-            auto &v_labels = location_to_labels->at(v);
+            auto &v_labels = location_to_labels[v];
             if (std::binary_search(v_labels.begin(), v_labels.end(), qu))
             {
                 cur_prec++;
