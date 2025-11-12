@@ -232,9 +232,10 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
     {
         uint32_t *res_vec = our_results + dim_or * i;
 
-        uint32_t cur_prec = 0;
-        for (auto &v : res_vec)
+        uint32_t cur_prec = 0, counter=0;
+        while (counter<recall_at)
         {
+            uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels->at(v);
             if (std::binary_search(v_labels.begin(), v_labels.end(), qu))
             {
