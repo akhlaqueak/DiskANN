@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1762298275 "/Users/akahmad/Documents/DiskANN/latex/main.tex" "main.pdf" "main" 1762298276 0
-  "/Users/akahmad/Documents/DiskANN/latex/main.tex" 1762298275 1570 f5dad0c7b1aa751568e9ab4e7d96a8b8 ""
+["pdflatex"] 1762752640 "/Users/akahmad/Documents/DiskANN/latex/main.tex" "main.pdf" "main" 1762752640 0
+  "/Users/akahmad/Documents/DiskANN/latex/main.tex" 1762752640 3142 1374a4bc41210030f8552ab1b1350547 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
@@ -31,8 +31,8 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1715264509 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1715264488 7883459 e5e4883e8f004e95d1669e7da5e42073 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "main.aux" 1762298276 171 9d9171269133503b1c0b3747ccad7940 "pdflatex"
-  "main.tex" 1762298275 1570 f5dad0c7b1aa751568e9ab4e7d96a8b8 ""
+  "main.aux" 1762752640 329 721e185a3a3d79e12c50452218cc3bae "pdflatex"
+  "main.tex" 1762752640 3142 1374a4bc41210030f8552ab1b1350547 ""
   (generated)
   "main.aux"
   "main.log"

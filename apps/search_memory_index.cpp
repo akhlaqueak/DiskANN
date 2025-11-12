@@ -83,7 +83,8 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                       .is_enable_tags(tags)
                       .is_concurrent_consolidate(false)
                       .is_pq_dist_build(false)
-                      .is_use_opq(false)
+                    .is_trained_filtering(trained_filtering)
+                    .is_use_opq(false)
                       .with_num_pq_chunks(0)
                       .with_num_frozen_pts(num_frozen_pts)
                       .build();
@@ -208,6 +209,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
             std::chrono::duration<double> diff = qe - qs;
             latency_stats[i] = (float)(diff.count() * 1000000);
         }
+        // ak parallel region ended here... 
         std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - s;
 
         double displayed_qps = query_num / diff.count();

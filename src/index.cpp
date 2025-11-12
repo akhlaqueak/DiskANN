@@ -1001,12 +1001,29 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
 {
     // AK: if it's not a filtered index use_filter=false, filteredLindex=0
     // AK: get_init_ids return the frozen points, in simple case it's the medoid...
-    const std::vector<uint32_t> init_ids = get_init_ids();
+    std::vector<uint32_t> init_ids = get_init_ids();
     const std::vector<LabelT> unused_filter_label;
+
+    // AK: added the starting points of all labels...
+    if (_trained_filtered_index && !_training_stage)
+    {
+        tsl::robin_set<uint32_t> init_s;
+        for (auto v : init_ids)
+            init_s.insert(v);
+
+        for (const auto &pair : _label_to_start_id)
+        {
+            init_s.insert(pair.second);
+        }
+
+        init_ids.clear();
+        for (auto v : init_s)
+            init_ids.emplace_back(v);
+    }
 
     if (!use_filter)
     {
-        // AK: not using filter
+        // AK: not using filter, also enters here when in production stage
         _data_store->get_vector(location, scratch->aligned_query());
         iterate_to_fixed_point(scratch, Lindex, init_ids, false, unused_filter_label, false);
     }
@@ -1131,7 +1148,7 @@ void Index<T, TagT, LabelT>::occlude_list(const uint32_t location, std::vector<N
                     continue;
 
                 bool prune_allowed = true;
-                if (_filtered_index || (_trained_filtered_index&&_training_stage))
+                if (_filtered_index || (_trained_filtered_index && _training_stage))
                 {
                     uint32_t a = iter->id;
                     uint32_t b = iter2->id;
@@ -1304,7 +1321,7 @@ void Index<T, TagT, LabelT>::link_points(std::vector<uint32_t> &visit_order, uin
         ScratchStoreManager<InMemQueryScratch<T>> manager(_query_scratch);
         auto scratch = manager.scratch_space();
         std::vector<uint32_t> pruned_list;
-        if (_filtered_index || (_trained_filtered_index))
+        if (_filtered_index || (_trained_filtered_index && _training_stage))
         {
             search_for_point_and_prune(node, _indexingQueueSize, pruned_list, scratch, true, _filterIndexingQueueSize);
         }
@@ -1363,15 +1380,17 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     else
         _start = calculate_entry_point();
 
-        diskann::Timer link_timer;
-    if(_trained_filtered_index){
+    diskann::Timer link_timer;
+    if (_trained_filtered_index)
+    {
         uint32_t training_batch_size = defaults::TRAINING_BATCH_SIZE * visit_order.size();
         _training_stage = true;
         link_points(visit_order, 0, training_batch_size);
         _training_stage = false;
         link_points(visit_order, training_batch_size, visit_order.size());
     }
-    else{
+    else
+    {
         link_points(visit_order, 0, visit_order.size());
     }
 
@@ -1901,7 +1920,7 @@ template <typename T, typename TagT, typename LabelT>
 void Index<T, TagT, LabelT>::build_filtered_index(const char *filename, const std::string &label_file,
                                                   const size_t num_points_to_load, const std::vector<TagT> &tags)
 {
-    
+
     // _filtered_index = true; // ak commented out
     _label_to_start_id.clear();
     size_t num_points_labels = 0;

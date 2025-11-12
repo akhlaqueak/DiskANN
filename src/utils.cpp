@@ -223,6 +223,29 @@ double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist
     return ((double)(total_recall / (num_queries))) * ((double)(100.0 / recall_at));
 }
 
+double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at, std::vector<std::vector<uint32_t>>* location_to_labels)
+{
+    double total_prec = 0;
+    std::set<uint32_t> gt, res;
+    bool printed = false;
+    for (size_t i = 0; i < num_queries; i++)
+    {
+        uint32_t *res_vec = our_results + dim_or * i;
+
+        uint32_t cur_prec = 0;
+        for (auto &v : res)
+        {
+            auto &v_labels = location_to_labels->at(v);
+            if (std::binary_search(v_labels.begin(), v_labels.end(), qu))
+            {
+                cur_prec++;
+            }
+        }
+        total_prec += cur_prec;
+    }
+    return ((double)(total_prec / (num_queries))) * ((double)(100.0 / recall_at));
+}
+
 double calculate_range_search_recall(uint32_t num_queries, std::vector<std::vector<uint32_t>> &groundtruth,
                                      std::vector<std::vector<uint32_t>> &our_results)
 {

@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}  % modern algorithmic environment
 \usepackage{amsmath}
 
 \begin{document}
@@ -32,5 +32,30 @@
 \end{algorithm}
 
 
-
+\begin{algorithm}
+    \caption{FilteredVamana Indexing Algorithm - Production Stage}
+    \begin{algorithmic}[1]
+    \Require Database $P$ with $n$ points where the $i$-th point has coordinates $x_i$, parameters $\alpha, L, R$.
+    \Ensure Directed graph $G$ over $P$ with out-degree $\le R$.
+    \State $G\gets$ FilteredVamana Graph obtained from Training Phase
+    \State Let $s$ denote the medoid of $P$
+    \State Let $\text{st}(f)$ denote the start node for filter label $f$ for every $f \in F$
+    \State Let $\sigma$ be a random permutation of $[n]$
+    \State Let $F_x$ be the label-set for every $x \in P$
+    \For{$i \in [n]$}
+        \State Let $S = \{\text{st}(.) \cup s\}$
+        % \State Let $[\emptyset, \mathcal{V}_{F_{x_{\sigma(i)}}}] \gets \text{FilteredGreedySearch}(S_{F_{x_{\sigma(i)}}}, x_{\sigma(i)}, 0, L, F_{x_{\sigma(i)}})$
+        \State Let $[\emptyset, \mathcal{V}] \gets \text{GreedySearch}(S, x_{\sigma(i)}, 0, L)$
+        % \State $\mathcal{V} \gets \mathcal{V} \cup \mathcal{V}_{F_{x_{\sigma(i)}}}$
+        \State Run $\text{RobustPrune}(\sigma(i), \mathcal{V}, \alpha, R)$ to update out-neighbors of $\sigma(i)$
+        \For{$j \in N_{\text{out}}(\sigma(i))$}
+            \State Update $N_{\text{out}}(j) \gets N_{\text{out}}(j) \cup \{\sigma(i)\}$
+            \If{$|N_{\text{out}}(j)| > R$}
+                \State Run $\text{RobustPrune}(j, N_{\text{out}}(j), \alpha, R)$ to update out-neighbors of $j$
+            \EndIf
+        \EndFor
+    \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+    
 \end{document}
