@@ -291,7 +291,7 @@ void Index<T, TagT, LabelT>::save(const char *filename, bool compact_before_save
 
     if (!_save_as_one_file)
     {
-        if (_filtered_index)
+        if (_filtered_index || _trained_filtered_index)
         {
             if (_label_to_start_id.size() > 0)
             {

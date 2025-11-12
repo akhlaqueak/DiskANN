@@ -193,7 +193,9 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     // This variable MUST be updated if the number of entries in the metadata
     // change.
     DISKANN_DLLEXPORT static const int METADATA_ROWS = 5;
-
+    DISKANN_DLLEXPORT std::vector<std::vector<LabelT>> get_location_to_labels(){ 
+        return _location_to_labels;
+    }
     // ********************************
     //
     // Internals of the library
@@ -414,6 +416,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     bool _trained_filtered_index = false;
     bool _training_stage = false;
     void link_points(std::vector<uint32_t> &visit_order, uint32_t st, uint32_t en);
+
     // fm: -----------------------------
 
     //

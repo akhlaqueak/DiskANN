@@ -37,6 +37,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
     T *query = nullptr;
     uint32_t *gt_ids = nullptr;
     float *gt_dists = nullptr;
+    bool trained_filtered_inex=true; // todo make it as a parameter to search_memory_index
     size_t query_num, query_dim, query_aligned_dim, gt_num, gt_dim;
     diskann::load_aligned_bin<T>(query_file, query, query_num, query_dim, query_aligned_dim);
 
@@ -83,7 +84,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                       .is_enable_tags(tags)
                       .is_concurrent_consolidate(false)
                       .is_pq_dist_build(false)
-                    .is_trained_filtering(true) //todo pass it as parameter
+                    .is_trained_filtering(trained_filtered_inex) 
                     .is_use_opq(false)
                       .with_num_pq_chunks(0)
                       .with_num_frozen_pts(num_frozen_pts)
@@ -223,8 +224,11 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
             recalls.reserve(recalls_to_print);
             for (uint32_t curr_recall = first_recall; curr_recall <= recall_at; curr_recall++)
             {
-                recalls.push_back(diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
-                                                            query_result_ids[test_id].data(), recall_at, curr_recall));
+                recalls.push_back(diskann::calculate_precision());
+                calculate_precision(num_queries, query_result_ids[test_id].data(), recall_at, curr_recall, index->get_location_to_labels());
+
+                // recalls.push_back(diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
+                //                                             query_result_ids[test_id].data(), recall_at, curr_recall));
             }
         }
 
@@ -404,7 +408,7 @@ int main(int argc, char **argv)
         std::cerr << "Only one of filter_label and query_filters_file should be provided" << std::endl;
         return -1;
     }
-
+    // ak: either filter_label or query_filter_file should be provided, not both. in case filter_label is given it assumes all queries have this filter
     std::vector<std::string> query_filters;
     if (filter_label != "")
     {
