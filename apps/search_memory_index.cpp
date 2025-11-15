@@ -224,8 +224,8 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
             recalls.reserve(recalls_to_print);
             for (uint32_t curr_recall = first_recall; curr_recall <= recall_at; curr_recall++)
             {
-                recalls.push_back(diskann::calculate_precision());
-                calculate_precision(num_queries, query_result_ids[test_id].data(), recall_at, curr_recall,  query_filters, index->get_location_to_labels());
+                auto prec=calculate_precision(num_queries, query_result_ids[test_id].data(), recall_at, curr_recall,  query_filters, index->get_location_to_labels());
+                recalls.push_back(prec);
 
                 // recalls.push_back(diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
                 //                                             query_result_ids[test_id].data(), recall_at, curr_recall));
