@@ -223,13 +223,17 @@ double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist
     return ((double)(total_recall / (num_queries))) * ((double)(100.0 / recall_at));
 }
 
-double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,const std::vector<std::vector<uint32_t>>& location_to_labels)
+double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at, std::vector<std::string> query_filters, const std::vector<std::vector<uint32_t>>& location_to_labels)
 {
+    
     double total_prec = 0;
     std::set<uint32_t> gt, res;
     bool printed = false;
     for (size_t i = 0; i < num_queries; i++)
     {
+        std::string raw_filter = query_filters.size() == 1 ? query_filters[0] : query_filters[i];
+        uint32_t q_filter = std::stoul(raw_filter);
+        // todo parse the raw_filter, it's a comma separated list of labels. Right now I am assuming it's just one number. 
         uint32_t *res_vec = our_results + dim_or * i;
 
         uint32_t cur_prec = 0, counter=0;
@@ -237,7 +241,7 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
         {
             uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels[v];
-            if (std::binary_search(v_labels.begin(), v_labels.end(), qu))
+            if (std::binary_search(v_labels.begin(), v_labels.end(), q_filter))
             {
                 cur_prec++;
             }
