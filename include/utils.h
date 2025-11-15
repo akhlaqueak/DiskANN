@@ -673,7 +673,7 @@ inline void copy_file(std::string in_file, std::string out_file)
 }
 
 template <typename LabelT>
-DISKANN_DLLEXPORT void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp)
+DISKANN_DLLEXPORT void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp);
 
 DISKANN_DLLEXPORT double calculate_recall(unsigned num_queries, unsigned *gold_std, float *gs_dist, unsigned dim_gs,
                                           unsigned *our_results, unsigned dim_or, unsigned recall_at);
