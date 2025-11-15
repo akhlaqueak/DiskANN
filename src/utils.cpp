@@ -260,7 +260,6 @@ void parse_label_file(const std::string &index_path, std::vector<std::vector<Lab
             token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
             LabelT token_as_num = (LabelT)std::stoul(token);
             lbls.push_back(token_as_num);
-            _labels.insert(token_as_num);
         }
 
         std::sort(lbls.begin(), lbls.end());
