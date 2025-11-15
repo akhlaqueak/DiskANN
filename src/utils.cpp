@@ -268,16 +268,14 @@ void parse_label_file(const std::string &index_path, std::vector<std::vector<Lab
     }
     
     std::ifstream map_reader(labels_map_file);
-    std::string line, token;
-    LabelT token_as_num;
-    std::string label_str;
+
     while (std::getline(map_reader, line))
     {
         std::istringstream iss(line);
         getline(iss, token, '\t');
-        label_str = token;
+        std::string label_str = token;
         getline(iss, token, '\t');
-        token_as_num = (LabelT)std::stoul(token);
+        LabelT token_as_num = (LabelT)std::stoul(token);
         string_to_int_mp[label_str] = token_as_num;
     }
 }
