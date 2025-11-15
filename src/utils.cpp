@@ -223,6 +223,66 @@ double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist
     return ((double)(total_recall / (num_queries))) * ((double)(100.0 / recall_at));
 }
 
+template <typename LabelT>
+void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp)
+{
+    std::string label_file = index_path+"_label_formatted.txt";
+    std::string labels_map_file = index_path+"_labels_map.txt";
+    // Format of Label txt file: filters with comma separators
+    std::ifstream infile(label_file);
+    if (infile.fail())
+    {
+        throw diskann::ANNException(std::string("Failed to open file ") + label_file, -1);
+    }
+
+    std::string line, token;
+    uint32_t line_cnt = 0;
+
+    while (std::getline(infile, line))
+    {
+        line_cnt++;
+    }
+    location_to_labels.resize(line_cnt, std::vector<LabelT>());
+
+    infile.clear();
+    infile.seekg(0, std::ios::beg);
+    line_cnt = 0;
+
+    while (std::getline(infile, line))
+    {
+        std::istringstream iss(line);
+        std::vector<LabelT> lbls(0);
+        getline(iss, token, '\t');
+        std::istringstream new_iss(token);
+        while (getline(new_iss, token, ','))
+        {
+            token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
+            token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
+            LabelT token_as_num = (LabelT)std::stoul(token);
+            lbls.push_back(token_as_num);
+            _labels.insert(token_as_num);
+        }
+
+        std::sort(lbls.begin(), lbls.end());
+        location_to_labels[line_cnt] = lbls;
+        line_cnt++;
+    }
+    
+    std::ifstream map_reader(labels_map_file);
+    std::string line, token;
+    LabelT token_as_num;
+    std::string label_str;
+    while (std::getline(map_reader, line))
+    {
+        std::istringstream iss(line);
+        getline(iss, token, '\t');
+        label_str = token;
+        getline(iss, token, '\t');
+        token_as_num = (LabelT)std::stoul(token);
+        string_to_int_mp[label_str] = token_as_num;
+    }
+}
+
 double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at, std::vector<std::string> query_filters, const std::vector<std::vector<uint32_t>>& location_to_labels)
 {
     

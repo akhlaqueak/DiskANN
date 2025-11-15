@@ -41,6 +41,10 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
     size_t query_num, query_dim, query_aligned_dim, gt_num, gt_dim;
     diskann::load_aligned_bin<T>(query_file, query, query_num, query_dim, query_aligned_dim);
 
+    std::vector<std::vector<LabelT> location_to_labels;
+    std::unordered_map<std::string, LabelT> filter_map;
+    diskann::parse_label_file(index_path, location_to_labels, filter_map);
+
     bool calc_recall_flag = false;
     if (truthset_file != std::string("null") && file_exists(truthset_file))
     {
@@ -224,7 +228,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
             recalls.reserve(recalls_to_print);
             for (uint32_t curr_recall = first_recall; curr_recall <= recall_at; curr_recall++)
             {
-                auto prec=calculate_precision((uint32_t)query_num, query_result_ids[test_id].data(), recall_at, curr_recall,  query_filters, index->get_location_to_labels());
+                auto prec=diskann::calculate_precision((uint32_t)query_num, query_result_ids[test_id].data(), recall_at, curr_recall,  query_filters, location_to_labels);
                 recalls.push_back(prec);
 
                 // recalls.push_back(diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
