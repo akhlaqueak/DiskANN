@@ -224,7 +224,7 @@ double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist
 }
 
 template <typename LabelT>
-void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp)
+void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp)
 {
     std::string label_file = index_path+"_label_formatted.txt";
     std::string labels_map_file = index_path+"_labels_map.txt";
