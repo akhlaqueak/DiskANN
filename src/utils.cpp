@@ -283,7 +283,8 @@ void parse_label_file(const std::string &index_path, std::vector<std::vector<Lab
 template <typename LabelT>
 double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
                            const std::vector<std::string> &query_filters,
-                           const std::vector<std::vector<LabelT>> &location_to_labels)
+                           const std::vector<std::vector<LabelT>> &location_to_labels,
+                           std::unordered_map<std::string, LabelT> &filter_map)
 {
 
     double total_prec = 0;
@@ -292,7 +293,7 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
     for (size_t i = 0; i < num_queries; i++)
     {
         std::string raw_filter = query_filters.size() == 1 ? query_filters[0] : query_filters[i];
-        uint32_t q_filter = std::stoul(raw_filter);
+        uint32_t q_filter = filter_map[raw_filter];
         // todo parse the raw_filter, it's a comma separated list of labels. Right now I am assuming it's just one
         // number.
         uint32_t *res_vec = our_results + dim_or * i;
@@ -342,11 +343,11 @@ double calculate_range_search_recall(uint32_t num_queries, std::vector<std::vect
 }
 template DISKANN_DLLEXPORT double calculate_precision<uint16_t>(
     uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
-    const std::vector<std::string> &query_filters, const std::vector<std::vector<uint16_t>> &location_to_labels);
+    const std::vector<std::string> &query_filters, const std::vector<std::vector<uint16_t>> &location_to_labels, std::unordered_map<std::string, LabelT> &filter_map);
 
 template DISKANN_DLLEXPORT double calculate_precision<uint32_t>(
     uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
-    const std::vector<std::string> &query_filters, const std::vector<std::vector<uint32_t>> &location_to_labels);
+    const std::vector<std::string> &query_filters, const std::vector<std::vector<uint32_t>> &location_to_labels, std::unordered_map<std::string, LabelT> &filter_map);
 
 template DISKANN_DLLEXPORT void parse_label_file<uint16_t>(const std::string &index_path,
                                                            std::vector<std::vector<uint16_t>> &location_to_labels,
