@@ -1024,7 +1024,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
         }
         init_label_st.clear();
 
-        for(ui i=0;i<best_L_nodes.size()&&i<NUM_INIT;i++){
+        for(size_t i=0;i<best_L_nodes.size()&&i<NUM_INIT;i++){
             Neighbor& nn = best_L_nodes[i];
             init_label_st.insert(nn.id);
         }
