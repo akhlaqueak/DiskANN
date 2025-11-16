@@ -1003,22 +1003,39 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     // AK: get_init_ids return the frozen points, in simple case it's the medoid...
     std::vector<uint32_t> init_ids = get_init_ids();
     const std::vector<LabelT> unused_filter_label;
+#define NUM_INIT 2 
+// todo make NUM_INIT as a parameter.
 
     // AK: added the starting points of all labels...
     if (_trained_filtered_index && !_training_stage)
     {
-        tsl::robin_set<uint32_t> init_s;
+        tsl::robin_set<uint32_t> init_label_st;
+        for (const auto &pair : _label_to_start_id)
+        {
+            init_label_st.insert(pair.second);
+        }
+
+        auto &best_L_nodes = scratch->best_l_nodes();
+        for (auto v : init_label_st)
+        {
+            float distance = _pq_data_store->get_distance(location, v);
+            Neighbor nn = Neighbor(v, distance);
+            best_L_nodes.insert(nn);
+        }
+        init_label_st.clear();
+
+        for(ui i=0;i<best_L_nodes.size()&&i<NUM_INIT;i++){
+            Neighbor& nn = best_L_nodes[i];
+            init_label_st.insert(nn.id);
+        }
+
+        // insert all init_ids to map, so that any duplicate is removed. 
         for (auto v : init_ids)
-            init_s.insert(v);
-
-        // for (const auto &pair : _label_to_start_id)
-        // {
-        //     init_s.insert(pair.second);
-        // }
-
+            init_label_st.insert(v);
         init_ids.clear();
-        for (auto v : init_s)
+        for (auto v : init_label_st)
             init_ids.emplace_back(v);
+        scratch->clear();
     }
 
     if (!use_filter)
