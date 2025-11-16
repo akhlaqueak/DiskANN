@@ -232,8 +232,8 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                 //                                                  recall_at, curr_recall, query_filters,
                 //                                                  location_to_labels, filter_map);
 
-                auto prec=recalls.push_back(diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
-                                                            query_result_ids[test_id].data(), recall_at, curr_recall));
+                    auto prec=diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
+                                                            query_result_ids[test_id].data(), recall_at, curr_recall);
                 recalls.push_back(prec);
             }
         }
