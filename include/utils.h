@@ -688,7 +688,8 @@ DISKANN_DLLEXPORT double calculate_range_search_recall(unsigned num_queries,
                                                        std::vector<std::vector<uint32_t>> &groundtruth,
                                                        std::vector<std::vector<uint32_t>> &our_results);
 
-DISKANN_DLLEXPORT double calculate_precision(
+DISKANN_DLLEXPORT 
+template <typename T> double calculate_precision(
     uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
     std::vector<std::string> &query_filters,
     const std::vector<std::vector<uint32_t>> &location_to_labels);
