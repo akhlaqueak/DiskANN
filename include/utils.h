@@ -672,7 +672,7 @@ inline void copy_file(std::string in_file, std::string out_file)
     dest.close();
 }
 
-template <typename LabelT>
+template <typename LabelT> 
 DISKANN_DLLEXPORT void parse_label_file(const std::string &index_path,
                                         std::vector<std::vector<LabelT>> &location_to_labels,
                                         std::unordered_map<std::string, LabelT> &string_to_int_mp);
