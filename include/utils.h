@@ -673,7 +673,9 @@ inline void copy_file(std::string in_file, std::string out_file)
 }
 
 template <typename LabelT>
-DISKANN_DLLEXPORT void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp);
+DISKANN_DLLEXPORT void parse_label_file(const std::string &index_path,
+                                        std::vector<std::vector<LabelT>> &location_to_labels,
+                                        std::unordered_map<std::string, LabelT> &string_to_int_mp);
 
 DISKANN_DLLEXPORT double calculate_recall(unsigned num_queries, unsigned *gold_std, float *gs_dist, unsigned dim_gs,
                                           unsigned *our_results, unsigned dim_or, unsigned recall_at);
@@ -685,6 +687,11 @@ DISKANN_DLLEXPORT double calculate_recall(unsigned num_queries, unsigned *gold_s
 DISKANN_DLLEXPORT double calculate_range_search_recall(unsigned num_queries,
                                                        std::vector<std::vector<uint32_t>> &groundtruth,
                                                        std::vector<std::vector<uint32_t>> &our_results);
+
+DISKANN_DLLEXPORT double calculate_precision(
+    uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
+    std::vector<std::string> &query_filters,
+    const std::vector<std::vector<uint32_t>> &location_to_labels);
 
 template <typename T>
 inline void load_bin(const std::string &bin_file, std::unique_ptr<T[]> &data, size_t &npts, size_t &dim,
