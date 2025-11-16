@@ -224,10 +224,11 @@ double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist
 }
 
 template <typename LabelT>
-void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels, std::unordered_map<std::string, LabelT> &string_to_int_mp)
+void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels,
+                      std::unordered_map<std::string, LabelT> &string_to_int_mp)
 {
-    std::string label_file = index_path+"_label_formatted.txt";
-    std::string labels_map_file = index_path+"_labels_map.txt";
+    std::string label_file = index_path + "_label_formatted.txt";
+    std::string labels_map_file = index_path + "_labels_map.txt";
     // Format of Label txt file: filters with comma separators
     std::ifstream infile(label_file);
     if (infile.fail())
@@ -266,7 +267,7 @@ void parse_label_file(const std::string &index_path, std::vector<std::vector<Lab
         location_to_labels[line_cnt] = lbls;
         line_cnt++;
     }
-    
+
     std::ifstream map_reader(labels_map_file);
 
     while (std::getline(map_reader, line))
@@ -279,10 +280,12 @@ void parse_label_file(const std::string &index_path, std::vector<std::vector<Lab
         string_to_int_mp[label_str] = token_as_num;
     }
 }
-template <typename LabelT> 
-double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at, std::vector<std::string>& query_filters, const std::vector<std::vector<LabelT>>& location_to_labels)
+template <typename LabelT>
+double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t dim_or, uint32_t recall_at,
+                           const std::vector<std::string> &query_filters,
+                           const std::vector<std::vector<LabelT>> &location_to_labels)
 {
-    
+
     double total_prec = 0;
     std::set<uint32_t> gt, res;
     bool printed = false;
@@ -290,11 +293,12 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
     {
         std::string raw_filter = query_filters.size() == 1 ? query_filters[0] : query_filters[i];
         uint32_t q_filter = std::stoul(raw_filter);
-        // todo parse the raw_filter, it's a comma separated list of labels. Right now I am assuming it's just one number. 
+        // todo parse the raw_filter, it's a comma separated list of labels. Right now I am assuming it's just one
+        // number.
         uint32_t *res_vec = our_results + dim_or * i;
 
-        uint32_t cur_prec = 0, counter=0;
-        while (counter<recall_at)
+        uint32_t cur_prec = 0, counter = 0;
+        while (counter < recall_at)
         {
             uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels[v];
