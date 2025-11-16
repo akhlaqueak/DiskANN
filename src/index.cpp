@@ -1011,10 +1011,10 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
         for (auto v : init_ids)
             init_s.insert(v);
 
-        for (const auto &pair : _label_to_start_id)
-        {
-            init_s.insert(pair.second);
-        }
+        // for (const auto &pair : _label_to_start_id)
+        // {
+        //     init_s.insert(pair.second);
+        // }
 
         init_ids.clear();
         for (auto v : init_s)
