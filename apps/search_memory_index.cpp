@@ -116,8 +116,10 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
     else
     {
         std::cout << std::setw(4) << "Ls" << std::setw(12) << qps_title << std::setw(18) << "Avg dist cmps"
-                  << std::setw(20) << "Mean Latency (mus)" << std::setw(15) << "99.9 Latency";
-        table_width += 4 + 12 + 18 + 20 + 15;
+                  << std::setw(20) << "Mean Latency (mus)" << std::setw(15) << "99.9 Latency" << std::setw(12)
+                  << "Precision";
+
+        table_width += 4 + 12 + 18 + 20 + 15 + 12;
     }
     uint32_t recalls_to_print = 0;
     const uint32_t first_recall = print_all_recalls ? 1 : recall_at;
@@ -228,13 +230,10 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
             recalls.reserve(recalls_to_print);
             for (uint32_t curr_recall = first_recall; curr_recall <= recall_at; curr_recall++)
             {
-                // auto prec = diskann::calculate_precision<LabelT>((uint32_t)query_num, query_result_ids[test_id].data(),
-                //                                                  recall_at, curr_recall, query_filters,
-                //                                                  location_to_labels, filter_map);
 
-                    auto prec=diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
-                                                            query_result_ids[test_id].data(), recall_at, curr_recall);
-                recalls.push_back(prec);
+                auto recall = diskann::calculate_recall((uint32_t)query_num, gt_ids, gt_dists, (uint32_t)gt_dim,
+                                                        query_result_ids[test_id].data(), recall_at, curr_recall);
+                recalls.push_back(recall);
             }
         }
 
@@ -255,11 +254,16 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                       << std::setw(20) << (float)mean_latency << std::setw(15)
                       << (float)latency_stats[(uint64_t)(0.999 * query_num)];
         }
+        auto prec = diskann::calculate_precision<LabelT>((uint32_t)query_num, query_result_ids[test_id].data(),
+                                                         recall_at, query_filters, location_to_labels, filter_map);
+        std::cout << std::setw(12) << prec;
         for (double recall : recalls)
         {
             std::cout << std::setw(12) << recall;
             best_recall = std::max(recall, best_recall);
         }
+
+
         std::cout << std::endl;
     }
 
