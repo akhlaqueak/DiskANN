@@ -2161,7 +2161,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
         auto &best_L_nodes = scratch->best_l_nodes();
         for (auto v : init_label_st)
         {
-            float distance = _pq_data_store->get_distance(location, v);
+            float distance = _pq_data_store->get_distance(query, v);
             Neighbor nn = Neighbor(v, distance);
             best_L_nodes.insert(nn);
         }
