@@ -23,6 +23,7 @@ struct IndexConfig
     Metric metric;
     size_t dimension;
     size_t max_points;
+    size_t filtered_medoids;
 
     bool dynamic_index;
     bool enable_tags;
@@ -47,14 +48,14 @@ struct IndexConfig
   private:
     IndexConfig(DataStoreStrategy data_strategy, GraphStoreStrategy graph_strategy, Metric metric, size_t dimension,
                 size_t max_points, size_t num_pq_chunks, size_t num_frozen_points, bool dynamic_index, bool enable_tags,
-                bool pq_dist_build, bool concurrent_consolidate, bool use_opq, bool filtered_index, bool trained_filtering,
+                bool pq_dist_build, bool concurrent_consolidate, bool use_opq, bool filtered_index, bool trained_filtering, size_t filtered_medoids,
                 std::string &data_type, const std::string &tag_type, const std::string &label_type,
                 std::shared_ptr<IndexWriteParameters> index_write_params,
                 std::shared_ptr<IndexSearchParams> index_search_params)
         : data_strategy(data_strategy), graph_strategy(graph_strategy), metric(metric), dimension(dimension),
           max_points(max_points), dynamic_index(dynamic_index), enable_tags(enable_tags), pq_dist_build(pq_dist_build),
           concurrent_consolidate(concurrent_consolidate), use_opq(use_opq), filtered_index(filtered_index),trained_filtering(trained_filtering),
-          num_pq_chunks(num_pq_chunks), num_frozen_pts(num_frozen_points), label_type(label_type), tag_type(tag_type),
+          filtered_medoids(filtered_medoids), num_pq_chunks(num_pq_chunks), num_frozen_pts(num_frozen_points), label_type(label_type), tag_type(tag_type),
           data_type(data_type), index_write_params(index_write_params), index_search_params(index_search_params)
     {
     }
