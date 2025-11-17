@@ -2168,7 +2168,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     filter_vec.emplace_back(filter_label);
 
     _data_store->preprocess_query(query, scratch);
-    auto retval = iterate_to_fixed_point(scratch, L, init_ids, true, filter_vec, true);
+    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, filter_vec, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
 
@@ -2196,7 +2196,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     }
     if (pos < K)
     {
-        // diskann::cerr << "Found fewer than K elements for query" << std::endl;
+        diskann::cerr << "Found fewer than K elements for query" << std::endl;
     }
 
     return retval;
