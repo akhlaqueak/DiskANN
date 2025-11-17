@@ -25,7 +25,7 @@ namespace po = boost::program_options;
 int main(int argc, char **argv)
 {
     std::string data_type, dist_fn, data_path, index_path_prefix, label_file, universal_label, label_type;
-    uint32_t num_threads, R, L, Lf, build_PQ_bytes;
+    uint32_t num_threads, R, L, Lf, build_PQ_bytes, filtered_medoids;
     float alpha;
     bool use_pq_build, use_opq, trained_filtering;
 
@@ -73,9 +73,10 @@ int main(int argc, char **argv)
 
         optional_configs.add_options()("trained_filtering", po::bool_switch()->default_value(false),
                                        program_options_utils::TRAINED_FILTERING);
+        optional_configs.add_options()("filtered_medoids", po::value<uint32_t>(&filtered_medoids)->default_value(4),
+                                       program_options_utils::FILTERED_MEDOIDS);
         // Merge required and optional parameters
         desc.add(required_configs).add(optional_configs);
-
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -88,8 +89,10 @@ int main(int argc, char **argv)
         use_pq_build = (build_PQ_bytes > 0);
         use_opq = vm["use_opq"].as<bool>();
         trained_filtering = vm["trained_filtering"].as<bool>();
-        if(trained_filtering) std::cout<<"running with trained filters"<<std::endl;
-        else std::cout<<"Not using trained filters"<<std::endl;
+        if (trained_filtering)
+            std::cout << "running with trained filters" << std::endl;
+        else
+            std::cout << "Not using trained filters" << std::endl;
     }
     catch (const std::exception &ex)
     {
