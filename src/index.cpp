@@ -37,7 +37,7 @@ Index<T, TagT, LabelT>::Index(const IndexConfig &index_config, std::shared_ptr<A
       _num_frozen_pts(index_config.num_frozen_pts), _dynamic_index(index_config.dynamic_index),
       _enable_tags(index_config.enable_tags), _indexingMaxC(DEFAULT_MAXC), _query_scratch(nullptr),
       _pq_dist(index_config.pq_dist_build), _use_opq(index_config.use_opq),
-      _filtered_index(index_config.filtered_index), _num_pq_chunks(index_config.num_pq_chunks),
+      _filtered_index(index_config.filtered_index), _filtered_medoids(index_config.filtered_medoids),_num_pq_chunks(index_config.num_pq_chunks),
       _delete_set(new tsl::robin_set<uint32_t>), _conc_consolidate(index_config.concurrent_consolidate),
       _trained_filtered_index(index_config.trained_filtering)
 {

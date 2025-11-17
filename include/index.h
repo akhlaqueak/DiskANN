@@ -376,6 +376,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     // Filter Support
 
     bool _filtered_index = false;
+    size_t _filtered_medoids = 2;
     // Location to label is only updated during insert_point(), all other reads are protected by
     // default as a location can only be released at end of consolidate deletes
     std::vector<std::vector<LabelT>> _location_to_labels;

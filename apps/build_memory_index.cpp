@@ -156,6 +156,7 @@ int main(int argc, char **argv)
                           .is_trained_filtering(trained_filtering)
                           .is_pq_dist_build(use_pq_build)
                           .with_num_pq_chunks(build_PQ_bytes)
+                          .with_filtered_medoids(filtered_medoids)
                           .build();
 
         auto index_factory = diskann::IndexFactory(config);

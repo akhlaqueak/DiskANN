@@ -66,7 +66,11 @@ class IndexConfigBuilder
 {
   public:
     IndexConfigBuilder() = default;
-
+    IndexConfigBuilder &with_filtered_medoids(size_t filtered_medoids)
+    {
+        this->_filtered_medoids = filtered_medoids;
+        return *this;
+    }
     IndexConfigBuilder &with_metric(Metric m)
     {
         this->_metric = m;
@@ -226,7 +230,7 @@ class IndexConfigBuilder
 
         return IndexConfig(_data_strategy, _graph_strategy, _metric, _dimension, _max_points, _num_pq_chunks,
                            _num_frozen_pts, _dynamic_index, _enable_tags, _pq_dist_build, _concurrent_consolidate,
-                           _use_opq, _filtered_index, _trained_filtering, _data_type, _tag_type, _label_type, _index_write_params,
+                           _use_opq, _filtered_index, _trained_filtering, _filtered_medoids, _data_type, _tag_type, _label_type, _index_write_params,
                            _index_search_params);
     }
 
@@ -240,6 +244,7 @@ class IndexConfigBuilder
     Metric _metric;
     size_t _dimension;
     size_t _max_points;
+    size_t _filtered_medoids;
 
     bool _dynamic_index = false;
     bool _enable_tags = false;
