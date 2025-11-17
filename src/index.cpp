@@ -1003,7 +1003,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     // AK: get_init_ids return the frozen points, in simple case it's the medoid...
     std::vector<uint32_t> init_ids = get_init_ids();
     const std::vector<LabelT> unused_filter_label;
-#define NUM_INIT 4
+#define NUM_INIT 2
 // todo make NUM_INIT as a parameter.
 
     // AK: added the starting points of all labels...
