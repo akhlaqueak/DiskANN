@@ -1036,7 +1036,6 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
         for (auto v : init_label_st)
             init_ids.emplace_back(v);
         scratch->clear();
-        std::cout<<init_ids.size()<<" "<<std::endl;
     }
 
     if (!use_filter)
@@ -1047,6 +1046,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     }
     else
     {
+        std::cout<<location<<" ";
         std::shared_lock<std::shared_timed_mutex> tl(_tag_lock, std::defer_lock);
         if (_dynamic_index)
             tl.lock();
