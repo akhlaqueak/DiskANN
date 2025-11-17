@@ -1030,8 +1030,8 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
         }
 
         // insert all init_ids to map, so that any duplicate is removed. 
-        // for (auto v : init_ids)
-        //     init_label_st.insert(v);
+        for (auto v : init_ids)
+            init_label_st.insert(v);
         init_ids.clear();
         for (auto v : init_label_st)
             init_ids.emplace_back(v);
