@@ -1036,6 +1036,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
         for (auto v : init_label_st)
             init_ids.emplace_back(v);
         scratch->clear();
+        std::cout<<init_ids.size()<<" "<<std::endl;
     }
 
     if (!use_filter)
