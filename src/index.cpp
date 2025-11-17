@@ -1003,7 +1003,7 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     // AK: get_init_ids return the frozen points, in simple case it's the medoid...
     std::vector<uint32_t> init_ids = get_init_ids();
     const std::vector<LabelT> unused_filter_label;
-#define NUM_INIT 10
+#define NUM_INIT 4
 // todo make NUM_INIT as a parameter.
 
     // AK: added the starting points of all labels...
@@ -1030,8 +1030,8 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
         }
 
         // insert all init_ids to map, so that any duplicate is removed. 
-        for (auto v : init_ids)
-            init_label_st.insert(v);
+        // for (auto v : init_ids)
+        //     init_label_st.insert(v);
         init_ids.clear();
         for (auto v : init_label_st)
             init_ids.emplace_back(v);
@@ -1046,7 +1046,6 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     }
     else
     {
-        std::cout<<location<<" ";
         std::shared_lock<std::shared_timed_mutex> tl(_tag_lock, std::defer_lock);
         if (_dynamic_index)
             tl.lock();
