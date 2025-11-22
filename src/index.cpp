@@ -1327,6 +1327,7 @@ void Index<T, TagT, LabelT>::inter_insert(uint32_t n, std::vector<uint32_t> &pru
 template <typename T, typename TagT, typename LabelT>
 void Index<T, TagT, LabelT>::link_points(std::vector<uint32_t> &visit_order, uint32_t st, uint32_t en)
 {
+    std::cout<<"using "<<_filtered_medoids<<std::endl;
 #pragma omp parallel for schedule(dynamic, 2048)
     for (int64_t node_ctr = st; node_ctr < (int64_t)(en); node_ctr++)
     {
@@ -1968,7 +1969,7 @@ void Index<T, TagT, LabelT>::build_filtered_index(const char *filename, const st
         }
     }
 
-    // this loop as the one shown in Algo 2 of the paper, num_cands is \tau
+    // ak this loop as the one shown in Algo 2 of the paper, num_cands is \tau
     uint32_t num_cands = 25;
     for (auto itr = _labels.begin(); itr != _labels.end(); itr++)
     {
