@@ -844,7 +844,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             inserted_into_pool_bs.resize(resize_size);
         }
     }
-
+    std::cout<<"use filter"<<use_filter<<std::endl;
     // AK: checks visited either in bitset or robinset, depeding on fast_iterate
     // Lambda to determine if a node has been visited
     auto is_not_visited = [this, fast_iterate, &inserted_into_pool_bs, &inserted_into_pool_rs](const uint32_t id) {
@@ -2195,6 +2195,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     filter_vec.emplace_back(filter_label);
 
     _data_store->preprocess_query(query, scratch);
+    
     auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, filter_vec, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
