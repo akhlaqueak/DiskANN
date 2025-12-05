@@ -844,7 +844,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             inserted_into_pool_bs.resize(resize_size);
         }
     }
-    std::cout<<"use filter"<<use_filter<<std::endl;
+
     // AK: checks visited either in bitset or robinset, depeding on fast_iterate
     // Lambda to determine if a node has been visited
     auto is_not_visited = [this, fast_iterate, &inserted_into_pool_bs, &inserted_into_pool_rs](const uint32_t id) {
@@ -1005,7 +1005,8 @@ void Index<T, TagT, LabelT>::search_for_point_and_prune(int location, uint32_t L
     const std::vector<LabelT> unused_filter_label;
 
     // AK: added the starting points of all labels...
-    if (_trained_filtered_index && !_training_stage)
+    // if (_trained_filtered_index && !_training_stage)
+    if (_trained_filtered_index)
     {
         tsl::robin_set<uint32_t> init_label_st;
         for (const auto &pair : _label_to_start_id)
@@ -1327,7 +1328,7 @@ void Index<T, TagT, LabelT>::inter_insert(uint32_t n, std::vector<uint32_t> &pru
 template <typename T, typename TagT, typename LabelT>
 void Index<T, TagT, LabelT>::link_points(std::vector<uint32_t> &visit_order, uint32_t st, uint32_t en)
 {
-    std::cout<<"using "<<_filtered_medoids<<std::endl;
+
 #pragma omp parallel for schedule(dynamic, 2048)
     for (int64_t node_ctr = st; node_ctr < (int64_t)(en); node_ctr++)
     {
