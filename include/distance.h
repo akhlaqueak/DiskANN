@@ -9,7 +9,8 @@ enum Metric
     L2 = 0,
     INNER_PRODUCT = 1,
     COSINE = 2,
-    FAST_L2 = 3
+    FAST_L2 = 3,
+    FUSION = 4
 };
 
 template <typename T> class Distance

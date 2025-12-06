@@ -113,6 +113,10 @@ int main(int argc, char **argv)
     {
         metric = diskann::Metric::COSINE;
     }
+    else if (dist_fn == std::string("fusion"))
+    {
+        metric = diskann::Metric::FUSION;
+    }
     else
     {
         std::cout << "Unsupported distance function. Currently only L2/ Inner "

@@ -598,7 +598,7 @@ void AVXNormalizedCosineDistanceFloat::normalize_and_copy(const float *query_vec
 // Get the right distance function for the given metric.
 template <> diskann::Distance<float> *get_distance_function(diskann::Metric m)
 {
-    if (m == diskann::Metric::L2)
+    if (m == diskann::Metric::L2 || m == diskann::Metric::FUSION)
     {
         if (Avx2SupportedCPU)
         {
@@ -648,7 +648,7 @@ template <> diskann::Distance<float> *get_distance_function(diskann::Metric m)
 
 template <> diskann::Distance<int8_t> *get_distance_function(diskann::Metric m)
 {
-    if (m == diskann::Metric::L2)
+    if (m == diskann::Metric::L2 || m == diskann::Metric::FUSION)
     {
         if (Avx2SupportedCPU)
         {
@@ -686,7 +686,7 @@ template <> diskann::Distance<int8_t> *get_distance_function(diskann::Metric m)
 
 template <> diskann::Distance<uint8_t> *get_distance_function(diskann::Metric m)
 {
-    if (m == diskann::Metric::L2)
+    if (m == diskann::Metric::L2 || m == diskann::Metric::FUSION)
     {
 #ifdef _WINDOWS
         diskann::cout << "WARNING: AVX/AVX2 distance function not defined for Uint8. "
