@@ -983,7 +983,14 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         assert(dist_scratch.capacity() >= id_scratch.size());
         compute_dists(id_scratch, dist_scratch);
         cmps += (uint32_t)id_scratch.size();
-
+        if(use_filter && _dist_metric==diskann::Metric::FUSION)
+        {
+            for (size_t m = 0; m < id_scratch.size(); ++m)
+            {
+                // no need to check common filters, because otherwise it has already been filtered out in earlier condition on use_filter
+                dist_scratch[m]=0.25*dist_scratch[m]+1;
+            }
+        }
         // Insert <id, dist> pairs into the pool of candidates
         for (size_t m = 0; m < id_scratch.size(); ++m)
         {
@@ -1401,7 +1408,6 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     if (_trained_filtered_index)
     {
         uint32_t training_batch_size = defaults::TRAINING_BATCH_SIZE * visit_order.size();
-        std::cout<<"got distance metric: "<<_dist_metric<<std::endl;
         _training_stage = true;
         link_points(visit_order, 0, training_batch_size);
         _training_stage = false;

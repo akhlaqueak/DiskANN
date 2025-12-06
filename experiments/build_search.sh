@@ -25,7 +25,7 @@ build_memory_index() {
 
     "$build_path/apps/build_memory_index" \
         --data_type float \
-        --dist_fn l2 \
+        --dist_fn fusion \
         --data_path "$ds_path/$ds_name/train_embeddings.bin" \
         --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index_with_training_100pc" \
         -R 32 \
