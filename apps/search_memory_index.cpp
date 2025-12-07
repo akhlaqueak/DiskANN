@@ -37,7 +37,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
     T *query = nullptr;
     uint32_t *gt_ids = nullptr;
     float *gt_dists = nullptr;
-    bool trained_filtered_inex = true; // todo make it as a parameter to search_memory_index
+    uint32_t trained_filtered_inex = 10; // todo make it as a parameter to search_memory_index
     size_t query_num, query_dim, query_aligned_dim, gt_num, gt_dim;
     diskann::load_aligned_bin<T>(query_file, query, query_num, query_dim, query_aligned_dim);
 
@@ -88,7 +88,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                       .is_enable_tags(tags)
                       .is_concurrent_consolidate(false)
                       .is_pq_dist_build(false)
-                      .is_trained_filtering(trained_filtered_inex)
+                      .with_trained_filtering(trained_filtered_inex)
                       .is_use_opq(false)
                       .with_num_pq_chunks(0)
                       .with_num_frozen_pts(num_frozen_pts)
