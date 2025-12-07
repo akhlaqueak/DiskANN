@@ -3,7 +3,7 @@
 # -----------------------------
 # 1. Compute Ground Truth
 # -----------------------------
-compute_groundtruth() {
+compute_groundtruth_for_filters() {
     local ds_name=$1
 
     "$build_path/apps/utils/compute_groundtruth_for_filters" \
@@ -16,7 +16,20 @@ compute_groundtruth() {
         --label_file "$ds_path/train_labels.txt" \
         --filter_label_file "$ds_path/test_labels.txt"
 }
+# -----------------------------
+# 1. Compute Ground Truth
+# -----------------------------
+compute_groundtruth() {
+    local ds_name=$1
 
+    "$build_path/apps/utils/compute_groundtruth" \
+        --data_type float \
+        --dist_fn l2 \
+        --base_file "$ds_path/$ds_name/train_embeddings.bin" \
+        --query_file "$ds_path/$ds_name/test_embeddings.bin" \
+        --gt_file "$ds_path/$ds_name/ground_truth.bin" \
+        --K 100 
+}
 # -----------------------------
 # 2. Build Memory Index
 # -----------------------------
@@ -25,7 +38,7 @@ build_memory_index() {
 
     "$build_path/apps/build_memory_index" \
         --data_type float \
-        --dist_fn fusion \
+        --dist_fn l2 \
         --data_path "$ds_path/$ds_name/train_embeddings.bin" \
         --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index" \
         -R 32 \
@@ -49,8 +62,8 @@ search_memory_index() {
         --query_file "$ds_path/$ds_name/test_embeddings.bin" \
         --gt_file "$ds_path/$ds_name/ground_truth.bin" \
         --query_filters_file "$ds_path/test_labels.txt" \
-        -K 10 \
-        -L 10 20 50 100 \
+        -K 20 \
+        -L 20 50 100 \
         --result_path "$ds_path/$ds_name/results"
 }
 
@@ -70,12 +83,13 @@ run_diskann_pipeline() {
     echo "----------------------------------------"
 
     # Step 1
-    echo "[1/3] Computing ground truth..."
-    compute_groundtruth "$ds_name"
+    # echo "[1/3] Computing ground truth..."
+    # compute_groundtruth "$ds_name"
+    # # compute_groundtruth_for_filters "$ds_name"
 
-    # Step 2
-    echo "[2/3] Building memory index..."
-    build_memory_index "$ds_name"
+    # # Step 2
+    # echo "[2/3] Building memory index..."
+    # build_memory_index "$ds_name"
 
     # Step 3
     echo "[3/3] Searching memory index..."
