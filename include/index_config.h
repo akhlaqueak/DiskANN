@@ -31,8 +31,8 @@ struct IndexConfig
     bool concurrent_consolidate;
     bool use_opq;
     bool filtered_index;
-    bool trained_filtering;
-
+    
+    size_t trained_filtering;
     size_t num_pq_chunks;
     size_t num_frozen_pts;
 
@@ -48,7 +48,7 @@ struct IndexConfig
   private:
     IndexConfig(DataStoreStrategy data_strategy, GraphStoreStrategy graph_strategy, Metric metric, size_t dimension,
                 size_t max_points, size_t num_pq_chunks, size_t num_frozen_points, bool dynamic_index, bool enable_tags,
-                bool pq_dist_build, bool concurrent_consolidate, bool use_opq, bool filtered_index, bool trained_filtering, size_t filtered_medoids,
+                bool pq_dist_build, bool concurrent_consolidate, bool use_opq, bool filtered_index, size_t trained_filtering, size_t filtered_medoids,
                 std::string &data_type, const std::string &tag_type, const std::string &label_type,
                 std::shared_ptr<IndexWriteParameters> index_write_params,
                 std::shared_ptr<IndexSearchParams> index_search_params)
@@ -131,7 +131,7 @@ class IndexConfigBuilder
         this->_use_opq = use_opq;
         return *this;
     }
-    IndexConfigBuilder &is_trained_filtering(bool trained_filtering)
+    IndexConfigBuilder &with_trained_filtering(size_t trained_filtering)
     {
         this->_trained_filtering = trained_filtering;
         return *this;
@@ -253,7 +253,7 @@ class IndexConfigBuilder
     bool _concurrent_consolidate = false;
     bool _use_opq = false;
     bool _filtered_index{defaults::HAS_LABELS};
-    bool _trained_filtering=false;
+    size_t trained_filtering=10;
 
     size_t _num_pq_chunks = 0;
     size_t _num_frozen_pts{defaults::NUM_FROZEN_POINTS_STATIC};

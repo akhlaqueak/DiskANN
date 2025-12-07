@@ -25,9 +25,9 @@ namespace po = boost::program_options;
 int main(int argc, char **argv)
 {
     std::string data_type, dist_fn, data_path, index_path_prefix, label_file, universal_label, label_type;
-    uint32_t num_threads, R, L, Lf, build_PQ_bytes, filtered_medoids;
+    uint32_t num_threads, R, L, Lf, build_PQ_bytes, filtered_medoids, trained_filtering;
     float alpha;
-    bool use_pq_build, use_opq, trained_filtering;
+    bool use_pq_build, use_opq;
 
     po::options_description desc{
         program_options_utils::make_program_description("build_memory_index", "Build a memory-based DiskANN index.")};
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
         optional_configs.add_options()("label_type", po::value<std::string>(&label_type)->default_value("uint"),
                                        program_options_utils::LABEL_TYPE_DESCRIPTION);
 
-        optional_configs.add_options()("trained_filtering", po::bool_switch()->default_value(false),
+        optional_configs.add_options()("trained_filtering", po::value<uint32_t>(&trained_filtering)->default_value(10),
                                        program_options_utils::TRAINED_FILTERING);
         optional_configs.add_options()("filtered_medoids", po::value<uint32_t>(&filtered_medoids)->default_value(4),
                                        program_options_utils::FILTERED_MEDOIDS);
@@ -88,11 +88,8 @@ int main(int argc, char **argv)
         po::notify(vm);
         use_pq_build = (build_PQ_bytes > 0);
         use_opq = vm["use_opq"].as<bool>();
-        trained_filtering = vm["trained_filtering"].as<bool>();
-        if (trained_filtering)
-            std::cout << "running with trained filters" << std::endl;
-        else
-            std::cout << "Not using trained filters" << std::endl;
+        std::cout << "Running with" << trained_filtering << "% trained batch" << std::endl;
+
     }
     catch (const std::exception &ex)
     {
@@ -155,9 +152,9 @@ int main(int argc, char **argv)
                           .with_label_type(label_type)
                           .is_dynamic_index(false)
                           .with_index_write_params(index_build_params)
+                          .with_trained_filtering(trained_filtering)
                           .is_enable_tags(false)
                           .is_use_opq(use_opq)
-                          .is_trained_filtering(trained_filtering)
                           .is_pq_dist_build(use_pq_build)
                           .with_num_pq_chunks(build_PQ_bytes)
                           .with_filtered_medoids(filtered_medoids)

@@ -412,7 +412,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     FixedChunkPQTable _pq_table;
 
     // fm: adding stuff for trained filtered indexing
-    bool _trained_filtered_index = false;
+    size_t _trained_filtered_index = 10;
     bool _training_stage = false;
     void link_points(std::vector<uint32_t> &visit_order, uint32_t st, uint32_t en);
 

@@ -46,7 +46,7 @@ build_memory_index() {
         --alpha 1.2 \
         --label_file "$ds_path/train_labels.txt" \
         --filtered_medoids 4 \
-        --trained_filtering
+        --trained_filtering 20
 }
 
 # -----------------------------

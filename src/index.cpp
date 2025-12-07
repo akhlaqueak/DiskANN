@@ -1409,7 +1409,7 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     diskann::Timer link_timer;
     if (_trained_filtered_index)
     {
-        uint32_t training_batch_size = defaults::TRAINING_BATCH_SIZE * visit_order.size();
+        uint32_t training_batch_size = _trained_filtered_index/100.0 * visit_order.size();
         _training_stage = true;
         link_points(visit_order, 0, training_batch_size);
         _training_stage = false;
