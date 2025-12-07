@@ -27,7 +27,7 @@ build_memory_index() {
         --data_type float \
         --dist_fn fusion \
         --data_path "$ds_path/$ds_name/train_embeddings.bin" \
-        --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index_with_training_100pc" \
+        --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index" \
         -R 32 \
         --FilteredLbuild 50 \
         --alpha 1.2 \
@@ -70,8 +70,8 @@ run_diskann_pipeline() {
     echo "----------------------------------------"
 
     # Step 1
-    # echo "[1/3] Computing ground truth..."
-    # compute_groundtruth "$ds_name"
+    echo "[1/3] Computing ground truth..."
+    compute_groundtruth "$ds_name"
 
     # Step 2
     echo "[2/3] Building memory index..."

@@ -953,12 +953,12 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             {
                 assert(id < _max_points + _num_frozen_pts);
                 // ak: I am changing it, and moving it down so that fusion metric can work. 
-                // if (use_filter)
-                // {
-                //     // NOTE: NEED TO CHECK IF THIS CORRECT WITH NEW LOCKS.
-                //     if (!detect_common_filters(id, search_invocation, filter_labels))
-                //         continue;
-                // }
+                if (use_filter)
+                {
+                    // NOTE: NEED TO CHECK IF THIS CORRECT WITH NEW LOCKS.
+                    if (!detect_common_filters(id, search_invocation, filter_labels))
+                        continue;
+                }
 
                 if (is_not_visited(id))
                 {
@@ -983,16 +983,16 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         assert(dist_scratch.capacity() >= id_scratch.size());
         compute_dists(id_scratch, dist_scratch);
         cmps += (uint32_t)id_scratch.size();
-        if(use_filter && _dist_metric==diskann::Metric::FUSION)
-        {
-            for (size_t m = 0; m < id_scratch.size(); ++m)
-            {
-                bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
+        // if(use_filter && _dist_metric==diskann::Metric::FUSION)
+        // {
+        //     for (size_t m = 0; m < id_scratch.size(); ++m)
+        //     {
+        //         bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
 
-                // no need to check common filters, because otherwise it has already been filtered out in earlier condition on use_filter
-                dist_scratch[m]=0.25*dist_scratch[m]+f;
-            }
-        }
+        //         // no need to check common filters, because otherwise it has already been filtered out in earlier condition on use_filter
+        //         dist_scratch[m]=0.25*dist_scratch[m]+f;
+        //     }
+        // }
         // Insert <id, dist> pairs into the pool of candidates
         for (size_t m = 0; m < id_scratch.size(); ++m)
         {
