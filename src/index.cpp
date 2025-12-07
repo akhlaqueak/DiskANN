@@ -993,6 +993,8 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         //         dist_scratch[m]=0.25*dist_scratch[m]+f;
         //     }
         // }
+
+        
         // Insert <id, dist> pairs into the pool of candidates
         for (size_t m = 0; m < id_scratch.size(); ++m)
         {
@@ -1410,6 +1412,7 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     if (_trained_filtered_index)
     {
         uint32_t training_batch_size = _trained_filtered_index/100.0 * visit_order.size();
+        std::cout<<"Training batch is: "<<training_batch_size<<" points"<<std::endl;
         _training_stage = true;
         link_points(visit_order, 0, training_batch_size);
         _training_stage = false;
