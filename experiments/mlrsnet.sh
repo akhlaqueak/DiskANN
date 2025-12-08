@@ -26,15 +26,15 @@ build_memory_index() {
     mkdir $index_prefix
     "$build_path/apps/build_memory_index" \
         --data_type float \
-        --dist_fn l2 \
+        --dist_fn fusion \
         --data_path "$ds_path/$ds_name" \
-        --index_path_prefix "$index_prefix/R32_L50_filtered_index_with_training_100pc" \
+        --index_path_prefix "$index_prefix/R32_L50_filtered_index" \
         -R 32 \
         --FilteredLbuild 50 \
         --alpha 1.2 \
         --label_file "$ds_path/label_file.txt" \
         --filtered_medoids 4 \
-        --trained_filtering 20
+        --trained_filtering 100
 }
 
 # -----------------------------
@@ -89,12 +89,12 @@ run_diskann_pipeline() {
 # -----------------------------
 # Paths and Dataset List
 # -----------------------------
-ds_path=/shared2/vector_datasets/goemotions
+ds_path=~/DiskANN/data/MLRSNet
 build_path=~/DiskANN/build
 index_path=~/DiskANN/data/index
 
 # datasets="mlrsnet_emb_CLIP-ViT-B-32-laion2B-s34B-b79K.bin  mlrsnet_emb_dinov2-small.bin  mlrsnet_emb_resnet-50.bin"
-datasets='goemotions_emb_all-mpnet-base-v2.bin'
+datasets='mlrsnet_emb_CLIP-ViT-B-32-laion2B-s34B-b79K.bin  mlrsnet_emb_dinov2-small.bin  mlrsnet_emb_resnet-50.bin'
 
 # -----------------------------
 # Run Pipeline for Each Dataset
