@@ -113,7 +113,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
 
     // Get converted integer label from string to int map (_label_map)
     DISKANN_DLLEXPORT LabelT get_converted_label(const std::string &raw_label);
-    DISKANN_DLLEXPORT std::vector<LabelT> get_converted_labels(const std::string &token);
+    DISKANN_DLLEXPORT std::vector<LabelT> get_converted_labels(const std::string token);
     // Set starting point of an index before inserting any points incrementally.
     // The data count should be equal to _num_frozen_pts * _aligned_dim.
     DISKANN_DLLEXPORT void set_start_points(const T *data, size_t data_count);
@@ -385,7 +385,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     std::unordered_map<LabelT, uint32_t> _label_to_start_id;
     std::unordered_map<uint32_t, uint32_t> _medoid_counts;
     std::vector<LabelT> _query_labels;
-    
+
     bool _use_universal_label = false;
     LabelT _universal_label = 0;
     uint32_t _filterIndexingQueueSize;
