@@ -62,8 +62,8 @@ search_memory_index() {
         --query_file "$ds_path/$ds_name/test_embeddings.bin" \
         --gt_file "$ds_path/$ds_name/ground_truth.bin" \
         --query_filters_file "$ds_path/test_labels.txt" \
-        -K 10 \
-        -L 10 20 50 100 \
+        -K 100 \
+        -L 100 200\
         --result_path "$ds_path/$ds_name/results"
 }
 
@@ -72,7 +72,7 @@ search_memory_index() {
 # -----------------------------
 run_diskann_pipeline() {
     local ds_name=$1
-
+    local tr=$2
     # Expand ~ in path
     build_path="${build_path/#\~/$HOME}"
 
@@ -89,7 +89,7 @@ run_diskann_pipeline() {
 
     # Step 2
     echo "[2/3] Building memory index..."
-    build_memory_index "$ds_name"
+    build_memory_index "$ds_name" "$tr"
 
     # Step 3
     echo "[3/3] Searching memory index..."

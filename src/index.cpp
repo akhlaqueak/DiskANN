@@ -804,6 +804,8 @@ bool Index<T, TagT, LabelT>::detect_common_filters(uint32_t point_id, bool searc
     return false;
 }
 
+#define FUSED
+
 template <typename T, typename TagT, typename LabelT>
 std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
     InMemQueryScratch<T> *scratch, const uint32_t Lsize, const std::vector<uint32_t> &init_ids, bool use_filter,
@@ -866,13 +868,13 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             throw diskann::ANNException(std::string("Wrong loc") + std::to_string(id), -1, __FUNCSIG__, __FILE__,
                                         __LINE__);
         }
-
+#ifndef FUSED
         if (use_filter)
         {
             if (!detect_common_filters(id, search_invocation, filter_labels))
                 continue;
         }
-
+#endif
         if (is_not_visited(id))
         {
             if (fast_iterate)
@@ -953,13 +955,14 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             {
                 assert(id < _max_points + _num_frozen_pts);
                 // ak: I am changing it, and moving it down so that fusion metric can work. 
+#ifndef FUSED
                 if (use_filter)
                 {
                     // NOTE: NEED TO CHECK IF THIS CORRECT WITH NEW LOCKS.
                     if (!detect_common_filters(id, search_invocation, filter_labels))
                         continue;
                 }
-
+#endif
                 if (is_not_visited(id))
                 {
                     id_scratch.push_back(id);
@@ -983,18 +986,20 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         assert(dist_scratch.capacity() >= id_scratch.size());
         compute_dists(id_scratch, dist_scratch);
         cmps += (uint32_t)id_scratch.size();
-        // if(use_filter && _dist_metric==diskann::Metric::FUSION)
-        // {
-        //     for (size_t m = 0; m < id_scratch.size(); ++m)
-        //     {
-        //         bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
+        #ifdef FUSED
+        if(use_filter && _dist_metric==diskann::Metric::FUSION)
+        {
+            for (size_t m = 0; m < id_scratch.size(); ++m)
+            {
+                bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
 
-        //         // no need to check common filters, because otherwise it has already been filtered out in earlier condition on use_filter
-        //         dist_scratch[m]=0.25*dist_scratch[m]+f;
-        //     }
-        // }
+                // no need to check common filters, because otherwise it has already been filtered out in earlier condition on use_filter
+                dist_scratch[m]=0.25*dist_scratch[m]+f;
+            }
+        }
+        #endif
 
-        
+
         // Insert <id, dist> pairs into the pool of candidates
         for (size_t m = 0; m < id_scratch.size(); ++m)
         {
