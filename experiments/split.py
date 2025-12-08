@@ -41,8 +41,8 @@ def main():
     train_bin = base + "_train.bin"
     test_bin  = base + "_test.bin"
 
-    train_lbl = base + "_train_labels.txt"
-    test_lbl  = base + "_test_labels.txt"
+    train_lbl = "train_labels.txt"
+    test_lbl  = "test_labels.txt"
 
     # Load labels
     if not os.path.exists(LABEL_FILENAME):
