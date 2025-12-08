@@ -1885,7 +1885,7 @@ LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
 }
 
 template <typename T, typename TagT, typename LabelT>
-std::vector<LabelT> Index<T, TagT, LabelT>::get_converted_labels(const std::string &token)
+std::vector<LabelT> Index<T, TagT, LabelT>::get_converted_labels(const std::string token)
 {
     _query_labels.clear();
     std::istringstream new_iss(token);
