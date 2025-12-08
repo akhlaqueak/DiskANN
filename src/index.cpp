@@ -2191,44 +2191,44 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     if (_dynamic_index)
         tl.lock();
 
-    // if (_label_to_start_id.find(filter_label) != _label_to_start_id.end())
-    // {
-    //     tsl::robin_set<uint32_t> init_label_st;
-    //     for (const auto &pair : _label_to_start_id)
-    //     {
-    //         init_label_st.insert(pair.second);
-    //     }
+    if (_label_to_start_id.find(filter_label) != _label_to_start_id.end())
+    {
+        tsl::robin_set<uint32_t> init_label_st;
+        for (const auto &pair : _label_to_start_id)
+        {
+            init_label_st.insert(pair.second);
+        }
 
-    //     auto &best_L_nodes = scratch->best_l_nodes();
-    //     for (auto v : init_label_st)
-    //     {
-    //         float distance = _pq_data_store->get_distance(query, v);
-    //         Neighbor nn = Neighbor(v, distance);
-    //         best_L_nodes.insert(nn);
-    //     }
-    //     init_label_st.clear();
+        auto &best_L_nodes = scratch->best_l_nodes();
+        for (auto v : init_label_st)
+        {
+            float distance = _pq_data_store->get_distance(query, v);
+            Neighbor nn = Neighbor(v, distance);
+            best_L_nodes.insert(nn);
+        }
+        init_label_st.clear();
 
-    //     for(size_t i=0;i<best_L_nodes.size()&&i<_filtered_medoids;i++){
-    //         Neighbor& nn = best_L_nodes[i];
-    //         init_label_st.insert(nn.id);
-    //     }
+        for(size_t i=0;i<best_L_nodes.size()&&i<_filtered_medoids;i++){
+            Neighbor& nn = best_L_nodes[i];
+            init_label_st.insert(nn.id);
+        }
 
-    //     // insert all init_ids to map, so that any duplicate is removed. 
-    //     for (auto v : init_ids)
-    //         init_label_st.insert(v);
-    //     init_ids.clear();
-    //     for (auto v : init_label_st)
-    //         init_ids.emplace_back(v);
-    //     scratch->clear();
+        // insert all init_ids to map, so that any duplicate is removed. 
+        for (auto v : init_ids)
+            init_label_st.insert(v);
+        init_ids.clear();
+        for (auto v : init_label_st)
+            init_ids.emplace_back(v);
+        scratch->clear();
         
-    //     init_ids.emplace_back(_label_to_start_id[filter_label]);
-    // }
-    // else
-    // {
-    //     diskann::cout << "No filtered medoid found. exitting "
-    //                   << std::endl; // RKNOTE: If universal label found start there
-    //     throw diskann::ANNException("No filtered medoid found. exitting ", -1);
-    // }
+        init_ids.emplace_back(_label_to_start_id[filter_label]);
+    }
+    else
+    {
+        diskann::cout << "No filtered medoid found. exitting "
+                      << std::endl; // RKNOTE: If universal label found start there
+        throw diskann::ANNException("No filtered medoid found. exitting ", -1);
+    }
     if (_dynamic_index)
         tl.unlock();
 
