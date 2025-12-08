@@ -1895,7 +1895,7 @@ std::vector<LabelT> Index<T, TagT, LabelT>::get_converted_labels(const std::stri
         token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
         token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
         if (_label_map.find(token) != _label_map.end()){
-            lbls.push_back(_label_map[token]);   
+            _query_labels.push_back(_label_map[token]);   
         }
     }
     std::sort(_query_labels.begin(), _query_labels.end());
