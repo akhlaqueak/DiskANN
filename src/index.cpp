@@ -1885,6 +1885,23 @@ LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
 }
 
 template <typename T, typename TagT, typename LabelT>
+std::vector<LabelT> Index<T, TagT, LabelT>::get_converted_labels(const std::string &token)
+{
+    _query_labels.clear();
+    std::istringstream new_iss(token);
+    while (getline(new_iss, token, ','))
+    {
+        token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
+        token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
+        if (_label_map.find(token) != _label_map.end()){
+            lbls.push_back(_label_map[token]);   
+        }
+    }
+    std::sort(_query_labels.begin(), _query_labels.end());
+    return _query_labels;
+}
+
+template <typename T, typename TagT, typename LabelT>
 void Index<T, TagT, LabelT>::parse_label_file(const std::string &label_file, size_t &num_points)
 {
     // Format of Label txt file: filters with comma separators
@@ -2116,7 +2133,8 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::_search_with_filters(const
                                                                            const uint32_t L, std::any &indices,
                                                                            float *distances)
 {
-    auto converted_label = this->get_converted_label(raw_label);
+    this->get_converted_labels(raw_label);
+    LabelT converted_label;
     if (typeid(uint64_t *) == indices.type())
     {
         auto ptr = std::any_cast<uint64_t *>(indices);
@@ -2154,8 +2172,8 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
         scratch->resize_for_new_L(L);
         diskann::cout << "Resize completed. New scratch->L is " << scratch->get_L() << std::endl;
     }
-
-    std::vector<LabelT> filter_vec;
+    if(_query_labels.size())
+    filter_label = _query_labels.back();
     std::vector<uint32_t> init_ids = get_init_ids();
 
     std::shared_lock<std::shared_timed_mutex> lock(_update_lock);
@@ -2204,11 +2222,11 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     if (_dynamic_index)
         tl.unlock();
 
-    filter_vec.emplace_back(filter_label);
+
 
     _data_store->preprocess_query(query, scratch);
     
-    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, filter_vec, true);
+    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, _query_labels, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
 
