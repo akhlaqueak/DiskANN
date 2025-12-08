@@ -112,6 +112,6 @@ datasets='clip_vitb32_laion2b  dinov2-small resnet-50'
 rm output.txt
 for tr in 100; do
 for ds in $datasets; do
-    run_diskann_pipeline "$ds" "$tr" >> output.txt
+    run_diskann_pipeline "$ds" "$tr" 
 done
 done
