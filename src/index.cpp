@@ -1887,17 +1887,26 @@ LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
 template <typename T, typename TagT, typename LabelT>
 std::vector<LabelT> Index<T, TagT, LabelT>::get_converted_labels(const std::string &raw_label)
 {
-    std::string token=raw_label;
     _query_labels.clear();
-    std::istringstream new_iss(token);
-    while (getline(new_iss, token, ','))
-    {
-        token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
-        token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
-        if (_label_map.find(token) != _label_map.end()){
-            _query_labels.push_back(_label_map[token]);   
+    
+    std::istringstream iss(raw_label);
+    std::string tok;
+
+    while (std::getline(iss, tok, ',')) {
+        // trim whitespace
+        tok.erase(0, tok.find_first_not_of(" \t\r\n"));
+        tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
+
+        if (tok.empty()) continue;
+
+        auto it = _label_map.find(tok);
+        if (it != _label_map.end()) {
+            _query_labels.push_back(it->second);
+        } else {
+            std::cerr << "Warning: unknown label '" << tok << "'\n";
         }
     }
+
     std::sort(_query_labels.begin(), _query_labels.end());
     return _query_labels;
 }
