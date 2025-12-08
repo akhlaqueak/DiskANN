@@ -293,9 +293,29 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
     for (size_t i = 0; i < num_queries; i++)
     {
         std::string raw_filter = query_filters.size() == 1 ? query_filters[0] : query_filters[i];
-        uint32_t q_filter = filter_map[raw_filter];
-        // todo parse the raw_filter, it's a comma separated list of labels. Right now I am assuming it's just one
-        // number.
+
+        std::vector<LabelT> query_labels;
+    
+        std::istringstream iss(raw_filter);
+        std::string tok;
+    
+        while (std::getline(iss, tok, ',')) {
+            // trim whitespace
+            tok.erase(0, tok.find_first_not_of(" \t\r\n"));
+            tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
+    
+            if (tok.empty()) continue;
+    
+            auto it = filter_map.find(tok);
+            if (it != filter_map.end()) {
+                query_labels.push_back(it->second);
+            } else {
+                std::cerr << "Warning: unknown label '" << tok << "'\n";
+            }
+        }
+    
+        std::sort(query_labels.begin(), query_labels.end());
+
         uint32_t *res_vec = our_results + recall_at * i;
 
         uint32_t cur_prec = 0, counter = 0;
@@ -303,10 +323,13 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
         {
             uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels[v];
-            if (std::binary_search(v_labels.begin(), v_labels.end(), q_filter))
+            bool matched=true;
+            for(auto q_filter: query_labels)
+            if (!std::binary_search(v_labels.begin(), v_labels.end(), q_filter))
             {
-                cur_prec++;
+                matched=false; break;
             }
+            if(matched) cur_prec++;
         }
         total_prec += cur_prec;
     }

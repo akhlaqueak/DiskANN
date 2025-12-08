@@ -83,13 +83,13 @@ run_diskann_pipeline() {
     echo "----------------------------------------"
 
     # Step 1
-    echo "[1/3] Computing ground truth..."
-    compute_groundtruth "$ds_name"
+    # echo "[1/3] Computing ground truth..."
+    # compute_groundtruth "$ds_name"
     # compute_groundtruth_for_filters "$ds_name"
 
     # Step 2
-    echo "[2/3] Building memory index..."
-    build_memory_index "$ds_name" "$tr"
+    # echo "[2/3] Building memory index..."
+    # build_memory_index "$ds_name" "$tr"
 
     # Step 3
     echo "[3/3] Searching memory index..."

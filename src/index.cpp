@@ -2144,7 +2144,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::_search_with_filters(const
                                                                            float *distances)
 {
     this->get_converted_labels(raw_label);
-    LabelT converted_label;
+    LabelT converted_label=0;
     if(_query_labels.size())
     converted_label = _query_labels.back();
     if (typeid(uint64_t *) == indices.type())
