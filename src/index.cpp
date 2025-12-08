@@ -2175,8 +2175,6 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
         scratch->resize_for_new_L(L);
         diskann::cout << "Resize completed. New scratch->L is " << scratch->get_L() << std::endl;
     }
-    if(_query_labels.size())
-    filter_label = _query_labels.back();
     std::vector<uint32_t> init_ids = get_init_ids();
 
     std::shared_lock<std::shared_timed_mutex> lock(_update_lock);
