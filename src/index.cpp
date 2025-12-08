@@ -2136,6 +2136,8 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::_search_with_filters(const
 {
     this->get_converted_labels(raw_label);
     LabelT converted_label;
+    if(_query_labels.size())
+    converted_label = _query_labels.back();
     if (typeid(uint64_t *) == indices.type())
     {
         auto ptr = std::any_cast<uint64_t *>(indices);
