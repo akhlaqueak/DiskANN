@@ -804,7 +804,6 @@ bool Index<T, TagT, LabelT>::detect_common_filters(uint32_t point_id, bool searc
     return false;
 }
 
-#define FUSED
 
 template <typename T, typename TagT, typename LabelT>
 std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
@@ -868,7 +867,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             throw diskann::ANNException(std::string("Wrong loc") + std::to_string(id), -1, __FUNCSIG__, __FILE__,
                                         __LINE__);
         }
-        if(!_dist_metric==diskann::Metric::FUSION)
+        if(!_dist_metric==diskann::Metric::FUSION) // 
         if (use_filter)
         {
             if (!detect_common_filters(id, search_invocation, filter_labels))
@@ -990,7 +989,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             for (size_t m = 0; m < id_scratch.size(); ++m)
             {
                 bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
-                dist_scratch[m]=0.25*dist_scratch[m]+f;
+                dist_scratch[m]=0.25*dist_scratch[m]+2*f;
             }
         }
 

@@ -111,7 +111,7 @@ datasets="clip_rn50_openai clip_vitb32_laion2b dinov2_vits14 resnet50_imagenet1k
 # Run Pipeline for Each Dataset
 # -----------------------------
 rm output.txt
-for tr in 0 20 50 100; do
+for tr in 0 20 50 80; do
 for ds in $datasets; do
     run_diskann_pipeline "$ds" "$tr" >> output.txt
 done
