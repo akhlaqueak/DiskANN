@@ -389,6 +389,10 @@ int main(int argc, char **argv)
     {
         metric = diskann::Metric::COSINE;
     }
+    else if (dist_fn == std::string("fusion"))
+    {
+        metric = diskann::Metric::FUSION;
+    }
     else if ((dist_fn == std::string("fast_l2")) && (data_type == std::string("float")))
     {
         metric = diskann::Metric::FAST_L2;

@@ -38,7 +38,7 @@ build_memory_index() {
 
     "$build_path/apps/build_memory_index" \
         --data_type float \
-        --dist_fn l2 \
+        --dist_fn "$distance" \
         --data_path "$ds_path/$ds_name/train_embeddings.bin" \
         --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index" \
         -R 32 \
@@ -57,13 +57,13 @@ search_memory_index() {
 
     "$build_path/apps/search_memory_index" \
         --data_type float \
-        --dist_fn l2 \
+        --dist_fn "$distance" \
         --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index" \
         --query_file "$ds_path/$ds_name/test_embeddings.bin" \
         --gt_file "$ds_path/$ds_name/ground_truth.bin" \
         --query_filters_file "$ds_path/test_labels.txt" \
-        -K 100 \
-        -L 100 200\
+        -K 10 \
+        -L 10 20 50 100\
         --result_path "$ds_path/$ds_name/results"
 }
 
@@ -106,7 +106,7 @@ ds_path=~/DiskANN/data/embeddings_diskann_format/cifar10
 build_path=~/DiskANN/build
 
 datasets="clip_rn50_openai clip_vitb32_laion2b dinov2_vits14 resnet50_imagenet1k"
-
+distance=fused
 # -----------------------------
 # Run Pipeline for Each Dataset
 # -----------------------------
