@@ -989,7 +989,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             for (size_t m = 0; m < id_scratch.size(); ++m)
             {
                 bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
-                dist_scratch[m]=0.25*dist_scratch[m]+2*f;
+                dist_scratch[m]=2*f*dist_scratch[m];
             }
         }
 
