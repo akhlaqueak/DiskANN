@@ -104,9 +104,9 @@ run_diskann_pipeline() {
 # -----------------------------
 ds_path=~/DiskANN/data/embeddings_diskann_format/cifar10
 build_path=~/DiskANN/build
+distance=fusion
 
 datasets="clip_rn50_openai clip_vitb32_laion2b dinov2_vits14 resnet50_imagenet1k"
-distance=fused
 # -----------------------------
 # Run Pipeline for Each Dataset
 # -----------------------------
