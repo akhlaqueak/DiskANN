@@ -224,10 +224,38 @@ double calculate_recall(uint32_t num_queries, uint32_t *gold_std, float *gs_dist
 }
 
 template <typename LabelT>
+void convert_query_raw_labels(const std::vector<std::string> &query_filters,
+                              std::unordered_map<std::string, LabelT> &filter_map,
+                              std::vector<std::vector<LabelT>> &location_to_labels)
+{
+    std::string line, token;
+    uint32_t line_cnt = query_filters.size();
+    location_to_labels.resize(line_cnt, std::vector<LabelT>());
+    for (std::string &q_labels : query_filters)
+    {
+        std::vector<LabelT> lbls;
+        std::istringstream new_iss(q_labels);
+        while (getline(new_iss, token, ','))
+        {
+            token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
+            token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
+            auto it = filter_map.find(token);
+            if (it != filter_map.end())
+                lbls.push_back(*it);
+            else
+                std::cout << "label not found" << std::endl;
+        }
+
+        std::sort(lbls.begin(), lbls.end());
+        location_to_labels[line_cnt] = lbls;
+    }
+}
+
+template <typename LabelT>
 void parse_label_file(const std::string &index_path, std::vector<std::vector<LabelT>> &location_to_labels,
                       std::unordered_map<std::string, LabelT> &string_to_int_mp)
 {
-    std::string label_file = index_path + "_label_formatted.txt";
+    std::string label_file = index_path + "_labels.txt";
     std::string labels_map_file = index_path + "_labels_map.txt";
     // Format of Label txt file: filters with comma separators
     std::ifstream infile(label_file);
@@ -342,12 +370,14 @@ double calculate_range_search_recall(uint32_t num_queries, std::vector<std::vect
     return total_recall / (num_queries);
 }
 template DISKANN_DLLEXPORT double calculate_precision<uint16_t>(
-    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at,
-    const std::vector<std::string> &query_filters, const std::vector<std::vector<uint16_t>> &location_to_labels, std::unordered_map<std::string, uint16_t> &filter_map);
+    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at, const std::vector<std::string> &query_filters,
+    const std::vector<std::vector<uint16_t>> &location_to_labels,
+    std::unordered_map<std::string, uint16_t> &filter_map);
 
 template DISKANN_DLLEXPORT double calculate_precision<uint32_t>(
-    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at,
-    const std::vector<std::string> &query_filters, const std::vector<std::vector<uint32_t>> &location_to_labels, std::unordered_map<std::string, uint32_t> &filter_map);
+    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at, const std::vector<std::string> &query_filters,
+    const std::vector<std::vector<uint32_t>> &location_to_labels,
+    std::unordered_map<std::string, uint32_t> &filter_map);
 
 template DISKANN_DLLEXPORT void parse_label_file<uint16_t>(const std::string &index_path,
                                                            std::vector<std::vector<uint16_t>> &location_to_labels,

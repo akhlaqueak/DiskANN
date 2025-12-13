@@ -41,9 +41,11 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
     size_t query_num, query_dim, query_aligned_dim, gt_num, gt_dim;
     diskann::load_aligned_bin<T>(query_file, query, query_num, query_dim, query_aligned_dim);
 
-    std::vector<std::vector<LabelT>> location_to_labels;
+    std::vector<std::vector<LabelT>> location_to_labels, query_location_to_labels;
     std::unordered_map<std::string, LabelT> filter_map;
     diskann::parse_label_file(index_path, location_to_labels, filter_map);
+    diskann::convert_query_raw_labels(query_filters, filter_map, query_location_to_labels);
+
 
     bool calc_recall_flag = false;
     if (truthset_file != std::string("null") && file_exists(truthset_file))
