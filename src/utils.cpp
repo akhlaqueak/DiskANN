@@ -247,7 +247,7 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
         }
 
         std::sort(lbls.begin(), lbls.end());
-        location_to_labels[line_cnt] = lbls;
+        location_to_labels.push_back(lbls);
     }
 }
 
