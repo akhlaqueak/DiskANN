@@ -326,12 +326,18 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
         uint32_t cur_prec = 0, counter = 0;
         while (counter < recall_at)
         {
-            bool matched=true;
+            bool matched = true;
             uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels[v];
-            for(auto v: v_labels) std::cout<<v<<" "; std::cout<<std::endl;
-            for(auto v: q_labels) std::cout<<v<<" "; std::cout<<std::endl;
-            
+            std::cout << "data labels: ";
+            for (auto v : v_labels)
+                std::cout << v << " ";
+            std::cout << std::endl;
+            std::cout << "query labels: ";
+            for (auto v : q_labels)
+                std::cout << v << " ";
+            std::cout << std::endl;
+
             if (std::includes(v_labels.begin(), v_labels.end(), q_labels.begin(), q_labels.end()))
             {
                 cur_prec++;
@@ -371,12 +377,14 @@ double calculate_range_search_recall(uint32_t num_queries, std::vector<std::vect
     return total_recall / (num_queries);
 }
 template DISKANN_DLLEXPORT double calculate_precision<uint16_t>(
-    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at, const std::vector<std::vector<uint16_t>>&query_filters,
+    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at,
+    const std::vector<std::vector<uint16_t>> &query_filters,
     const std::vector<std::vector<uint16_t>> &location_to_labels,
     std::unordered_map<std::string, uint16_t> &filter_map);
 
 template DISKANN_DLLEXPORT double calculate_precision<uint32_t>(
-    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at, const std::vector<std::vector<uint32_t>> &query_filters,
+    uint32_t num_queries, uint32_t *our_results, uint32_t recall_at,
+    const std::vector<std::vector<uint32_t>> &query_filters,
     const std::vector<std::vector<uint32_t>> &location_to_labels,
     std::unordered_map<std::string, uint32_t> &filter_map);
 
@@ -394,7 +402,7 @@ template DISKANN_DLLEXPORT void convert_query_raw_labels(const std::vector<std::
                                                          std::unordered_map<std::string, uint32_t> &filter_map,
                                                          std::vector<std::vector<uint32_t>> &location_to_labels);
 #ifdef EXEC_ENV_OLS
-    void get_bin_metadata(AlignedFileReader &reader, size_t &npts, size_t &ndim, size_t offset)
+void get_bin_metadata(AlignedFileReader &reader, size_t &npts, size_t &ndim, size_t offset)
 {
     std::vector<AlignedRead> readReqs;
     AlignedRead readReq;
