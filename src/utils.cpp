@@ -230,7 +230,7 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
 {
     std::string line, token;
     uint32_t line_cnt = query_filters.size();
-    location_to_labels.reserve(line_cnt, std::vector<LabelT>());
+    location_to_labels.reserve(line_cnt);
     for (std::string q_labels : query_filters)
     {
         std::vector<LabelT> lbls;
