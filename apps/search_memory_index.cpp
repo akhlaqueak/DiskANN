@@ -258,7 +258,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
                       << (float)latency_stats[(uint64_t)(0.999 * query_num)];
         }
         auto prec = diskann::calculate_precision<LabelT>((uint32_t)query_num, query_result_ids[test_id].data(),
-                                                         recall_at, query_filters, location_to_labels, filter_map);
+                                                         recall_at, query_location_to_labels, location_to_labels, filter_map);
         std::cout << std::setw(12) << prec;
         for (double recall : recalls)
         {
