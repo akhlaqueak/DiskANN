@@ -247,7 +247,7 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
         }
 
         std::sort(lbls.begin(), lbls.end());
-        location_to_labels.push_back(lbls);
+        location_to_labels.emplace_back(lbls);
     }
 }
 
@@ -329,14 +329,6 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
             bool matched = true;
             uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels[v];
-            std::cout << "data labels: ";
-            for (auto v : v_labels)
-                std::cout << v << " ";
-            std::cout << std::endl;
-            std::cout << "query labels: ";
-            for (auto v : q_labels)
-                std::cout << v << " ";
-            std::cout << std::endl;
 
             if (std::includes(v_labels.begin(), v_labels.end(), q_labels.begin(), q_labels.end()))
             {
