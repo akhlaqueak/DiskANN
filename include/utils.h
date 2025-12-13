@@ -1112,11 +1112,11 @@ inline std::vector<std::string> read_file_to_vector_of_strings(const std::string
             {
                 break;
             }
-            if (line.find(',') != std::string::npos)
-            {
-                std::cerr << "Every query must have exactly one filter" << std::endl;
-                exit(-1);
-            }
+            // if (line.find(',') != std::string::npos)
+            // {
+            //     std::cerr << "Every query must have exactly one filter" << std::endl;
+            //     exit(-1);
+            // }
             if (!line.empty() && (line.back() == '\r' || line.back() == '\n'))
             {
                 line.erase(line.size() - 1);

@@ -3,7 +3,7 @@
 # -----------------------------
 # 1. Compute Ground Truth
 # -----------------------------
-compute_groundtruth() {
+compute_groundtruth_for_filters() {
     local ds_name=$1
 
     "$build_path/apps/utils/compute_groundtruth_for_filters" \
@@ -17,6 +17,19 @@ compute_groundtruth() {
         --filter_label_file "$ds_path/test_labels.txt"
 }
 
+compute_groundtruth() {
+    local ds_name=$1
+
+    "$build_path/apps/utils/compute_groundtruth" \
+        --data_type float \
+        --dist_fn l2 \
+        --base_file "$ds_path/$ds_name/train_embeddings.bin" \
+        --query_file "$ds_path/$ds_name/test_embeddings.bin" \
+        --gt_file "$ds_path/$ds_name/ground_truth.bin" \
+        --K 100 
+}
+
+
 # -----------------------------
 # 2. Build Memory Index
 # -----------------------------
@@ -26,8 +39,8 @@ build_memory_index() {
     mkdir $index_prefix
     "$build_path/apps/build_memory_index" \
         --data_type float \
-        --dist_fn fusion \
-        --data_path "$ds_path/$ds_name" \
+        --dist_fn l2 \
+        --data_path  "$ds_path/$ds_name/train_embeddings.bin" \
         --index_path_prefix "$index_prefix/R32_L50_filtered_index" \
         -R 32 \
         --FilteredLbuild 50 \
@@ -79,8 +92,8 @@ run_diskann_pipeline() {
     build_memory_index "$ds_name"
 
     # Step 3
-    # echo "[3/3] Searching memory index..."
-    # search_memory_index "$ds_name"
+    echo "[3/3] Searching memory index..."
+    search_memory_index "$ds_name"
 
     echo "Finished pipeline for: $ds_name"
     echo "========================================"
@@ -93,9 +106,7 @@ ds_path=~/DiskANN/data/MLRSNet
 build_path=~/DiskANN/build
 index_path=~/DiskANN/data/index
 
-# datasets="mlrsnet_emb_CLIP-ViT-B-32-laion2B-s34B-b79K.bin  mlrsnet_emb_dinov2-small.bin  mlrsnet_emb_resnet-50.bin"
-datasets='mlrsnet_emb_CLIP-ViT-B-32-laion2B-s34B-b79K.bin  mlrsnet_emb_dinov2-small.bin  mlrsnet_emb_resnet-50.bin'
-
+datasets='clip_vitb32_laion2b  dinov2-small resnet-50'
 # -----------------------------
 # Run Pipeline for Each Dataset
 # -----------------------------
