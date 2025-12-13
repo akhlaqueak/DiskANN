@@ -391,7 +391,7 @@ template DISKANN_DLLEXPORT void convert_query_raw_labels(const std::vector<std::
                                                          std::vector<std::vector<uint16_t>> &location_to_labels);
 template DISKANN_DLLEXPORT void convert_query_raw_labels(const std::vector<std::string> &query_filters,
                                                          std::unordered_map<std::string, uint32_t> &filter_map,
-                                                         std::vector<std::vector<uint32_t>> &location_to_labels)
+                                                         std::vector<std::vector<uint32_t>> &location_to_labels);
 #ifdef EXEC_ENV_OLS
     void get_bin_metadata(AlignedFileReader &reader, size_t &npts, size_t &ndim, size_t offset)
 {
