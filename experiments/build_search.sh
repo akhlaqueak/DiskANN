@@ -62,8 +62,8 @@ search_memory_index() {
         --query_file "$ds_path/$ds_name/test_embeddings.bin" \
         --gt_file "$ds_path/$ds_name/ground_truth.bin" \
         --query_filters_file "$ds_path/test_labels.txt" \
-        -K 20 \
-        -L  20 50 100 200 \
+        -K 10 \
+        -L  10 20 50 100 \
         --result_path "$ds_path/$ds_name/results"
 }
 
