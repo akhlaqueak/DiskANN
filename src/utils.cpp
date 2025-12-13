@@ -329,6 +329,8 @@ double calculate_precision(uint32_t num_queries, uint32_t *our_results, uint32_t
             bool matched=true;
             uint32_t v = res_vec[counter++];
             auto &v_labels = location_to_labels[v];
+            for(auto v: v_labels) std::cout<<v<<" "; std::cout<<endl;
+            for(auto v: q_labels) std::cout<<v<<" "; std::cout<<endl;
             
             if (std::includes(v_labels.begin(), v_labels.end(), q_labels.begin(), q_labels.end()))
             {
