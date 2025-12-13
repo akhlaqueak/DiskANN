@@ -241,7 +241,7 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
             token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
             auto it = filter_map.find(token);
             if (it != filter_map.end())
-                lbls.push_back(*it);
+                lbls.push_back(*it.second);
             else
                 std::cout << "label not found" << std::endl;
         }
