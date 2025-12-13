@@ -231,7 +231,7 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
     std::string line, token;
     uint32_t line_cnt = query_filters.size();
     location_to_labels.resize(line_cnt, std::vector<LabelT>());
-    for (std::string &q_labels : query_filters)
+    for (std::string q_labels : query_filters)
     {
         std::vector<LabelT> lbls;
         std::istringstream new_iss(q_labels);
