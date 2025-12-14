@@ -3,38 +3,51 @@
 # -----------------------------
 # 1. Compute Ground Truth
 # -----------------------------
-compute_groundtruth() {
+compute_groundtruth_for_filters() {
     local ds_name=$1
 
     "$build_path/apps/utils/compute_groundtruth_for_filters" \
         --data_type float \
         --dist_fn l2 \
-        --base_file "$ds_path/$ds_name/train_embeddings.bin" \
-        --query_file "$ds_path/$ds_name/test_embeddings.bin" \
-        --gt_file "$ds_path/$ds_name/ground_truth.bin" \
+        --base_file "$index_prefix/train_embeddings.bin" \
+        --query_file "$index_prefix/test_embeddings.bin" \
+        --gt_file "$index_prefix/ground_truth.bin" \
         --K 100 \
         --label_file "$ds_path/train_labels.txt" \
         --filter_label_file "$ds_path/test_labels.txt"
 }
+
+compute_groundtruth() {
+    local ds_name=$1
+
+    "$build_path/apps/utils/compute_groundtruth" \
+        --data_type float \
+        --dist_fn l2 \
+        --base_file "$index_prefix/train_embeddings.bin" \
+        --query_file "$index_prefix/test_embeddings.bin" \
+        --gt_file "$index_prefix/ground_truth.bin" \
+        --K 100 
+}
+
 
 # -----------------------------
 # 2. Build Memory Index
 # -----------------------------
 build_memory_index() {
     local ds_name=$1
-    index_prefix=$index_path/${ds_name/.bin}
+
     mkdir $index_prefix
     "$build_path/apps/build_memory_index" \
         --data_type float \
-        --dist_fn l2 \
-        --data_path "$ds_path/$ds_name" \
-        --index_path_prefix "$index_prefix/R32_L50_filtered_index_with_training_100pc" \
+        --dist_fn $distance \
+        --data_path  "$index_prefix/train_embeddings.bin" \
+        --index_path_prefix "$index_prefix/R32_L50_filtered_index" \
         -R 32 \
         --FilteredLbuild 50 \
         --alpha 1.2 \
         --label_file "$ds_path/label_file.txt" \
         --filtered_medoids 4 \
-        --trained_filtering 20
+        --trained_filtering $training
 }
 
 # -----------------------------
@@ -42,17 +55,16 @@ build_memory_index() {
 # -----------------------------
 search_memory_index() {
     local ds_name=$1
-
     "$build_path/apps/search_memory_index" \
         --data_type float \
-        --dist_fn l2 \
-        --index_path_prefix "$ds_path/$ds_name/R32_L50_filtered_index" \
-        --query_file "$ds_path/$ds_name/test_embeddings.bin" \
-        --gt_file "$ds_path/$ds_name/ground_truth.bin" \
+        --dist_fn $distance \
+        --index_path_prefix "$index_prefix/R32_L50_filtered_index" \
+        --query_file "$index_prefix/test_embeddings.bin" \
+        --gt_file "$index_prefix/ground_truth.bin" \
         --query_filters_file "$ds_path/test_labels.txt" \
         -K 10 \
         -L 10 20 50 100 \
-        --result_path "$ds_path/$ds_name/results"
+        --result_path "$index_prefix/results"
 }
 
 # -----------------------------
@@ -70,7 +82,7 @@ run_diskann_pipeline() {
     echo "Build path: $build_path"
     echo "----------------------------------------"
 
-    # Step 1
+    # # Step 1
     # echo "[1/3] Computing ground truth..."
     # compute_groundtruth "$ds_name"
 
@@ -79,8 +91,8 @@ run_diskann_pipeline() {
     build_memory_index "$ds_name"
 
     # Step 3
-    # echo "[3/3] Searching memory index..."
-    # search_memory_index "$ds_name"
+    echo "[3/3] Searching memory index..."
+    search_memory_index "$ds_name"
 
     echo "Finished pipeline for: $ds_name"
     echo "========================================"
@@ -89,16 +101,24 @@ run_diskann_pipeline() {
 # -----------------------------
 # Paths and Dataset List
 # -----------------------------
-ds_path=/shared2/vector_datasets/goemotions
-build_path=~/DiskANN/build
-index_path=~/DiskANN/data/index
+paths='MLRSNet  aapd   goemotions'
+for path in $paths; do
+    ds_path=~/DiskANN/data/$path
+    build_path=~/DiskANN/build
 
-# datasets="mlrsnet_emb_CLIP-ViT-B-32-laion2B-s34B-b79K.bin  mlrsnet_emb_dinov2-small.bin  mlrsnet_emb_resnet-50.bin"
-datasets='goemotions_emb_all-mpnet-base-v2.bin'
-
-# -----------------------------
-# Run Pipeline for Each Dataset
-# -----------------------------
-for ds in $datasets; do
-    run_diskann_pipeline "$ds"
+    datasets=$(find $ds_path -maxdepth 1 -mindepth 1 -type d -printf "%f\n")
+    # -----------------------------
+    # Run Pipeline for Each Dataset
+    # -----------------------------
+    distance=fusion
+    trainings='0 20 50 100'
+    # trainings='0'
+    output=$ds_path/output_$distance
+    rm $output
+    for training in $trainings; do
+        for ds in $datasets; do
+            index_prefix=$ds_path/$ds
+            run_diskann_pipeline "$ds" >> $output 2>&1
+        done
+    done
 done
