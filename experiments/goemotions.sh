@@ -113,7 +113,7 @@ for path in $paths; do
     distance=fusion
     trainings='0 20 50 100'
     # trainings='0'
-    output=$ds_path/output_$distance
+    output=$ds_path/output_1hamming_$distance
     rm $output
     for training in $trainings; do
         for ds in $datasets; do
