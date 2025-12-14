@@ -1418,6 +1418,7 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     }
     else
     {
+        _trained_filtered_index=1;
         link_points(visit_order, 0, visit_order.size());
     }
 
