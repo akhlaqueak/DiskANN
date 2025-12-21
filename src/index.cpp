@@ -953,7 +953,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             {
                 assert(id < _max_points + _num_frozen_pts);
 
-                if(!_dist_metric==diskann::Metric::FUSION)
+                // if(!_dist_metric==diskann::Metric::FUSION)
                 if (use_filter)
                 {
                     // NOTE: NEED TO CHECK IF THIS CORRECT WITH NEW LOCKS.
@@ -989,7 +989,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             for (size_t m = 0; m < id_scratch.size(); ++m)
             {
                 bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
-                dist_scratch[m]=2*f+0.25*dist_scratch[m];
+                dist_scratch[m]=0.25*dist_scratch[m]+f;
             }
         }
 
