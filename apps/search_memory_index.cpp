@@ -65,7 +65,7 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
     bool filtered_search = false;
     if (!query_filters.empty())
     {
-        // filtered_search = true;
+        filtered_search = true;
         if (query_filters.size() != 1 && query_filters.size() != query_num)
         {
             std::cout << "Error. Mismatch in number of queries and size of query "

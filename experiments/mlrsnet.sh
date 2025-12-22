@@ -110,7 +110,7 @@ datasets='clip_vitb32_laion2b  dinov2-small   resnet-50'
 # -----------------------------
 # Run Pipeline for Each Dataset
 # -----------------------------
-distance=l2
+distance=fusion
 rm output.txt
 for training in 0 20 50 100; do
 for ds in $datasets; do
