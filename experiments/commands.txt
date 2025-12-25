@@ -1,3 +1,8 @@
 ../build/apps/build_memory_index  --data_type float --dist_fn l2 --data_path ../data/siftsmall/siftsmall_base.bin --index_path_prefix ../data/siftsmall/siftsmall_R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file ./rand_labels_50_10K.txt --universal_label 0
 
 ../build/apps/search_memory_index  --data_type float --dist_fn l2 --index_path_prefix ../data/siftsmall/siftsmall_R32_L50_filtered_index --query_file ../data/siftsmall/siftsmall_query.bin --gt_file ../data/siftsmall/siftsmall_gt_35.bin --filter_label 35 -K 10 -L 10 20 30 40 50 100 --result_path ../data/siftsmall/filtered_search_results
+
+
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn fusion --data_path /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/MLRSNet/label_file.txt --filtered_medoids 4 --trained_filtering 0
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn fusion --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/MLRSNet/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/results
