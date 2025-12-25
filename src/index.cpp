@@ -1870,14 +1870,38 @@ std::unordered_map<std::string, LabelT> Index<T, TagT, LabelT>::load_label_map(c
 template <typename T, typename TagT, typename LabelT>
 LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
 {
-    if (_label_map.find(raw_label) != _label_map.end())
-    {
-        return _label_map[raw_label];
+
+    _query_labels.clear();
+    
+    std::istringstream iss(raw_label);
+    std::string tok;
+
+    while (std::getline(iss, tok, ',')) {
+        // trim whitespace
+        tok.erase(0, tok.find_first_not_of(" \t\r\n"));
+        tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
+
+        if (tok.empty()) continue;
+
+        auto it = _label_map.find(tok);
+        if (it != _label_map.end()) {
+            _query_labels.push_back(it->second);
+        } else {
+            std::cerr << "Warning: unknown label '" << tok << "'\n";
+        }
     }
-    if (_use_universal_label)
-    {
-        return _universal_label;
-    }
+
+    std::sort(_query_labels.begin(), _query_labels.end());
+    LabelT retval; //returning empty value. 
+    return retval;
+    // if (_label_map.find(raw_label) != _label_map.end())
+    // {
+    //     return _label_map[raw_label];
+    // }
+    // if (_use_universal_label)
+    // {
+    //     return _universal_label;
+    // }
     std::stringstream stream;
     stream << "Unable to find label in the Label Map";
     diskann::cerr << stream.str() << std::endl;
@@ -2135,7 +2159,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::_search_with_filters(const
 
 template <typename T, typename TagT, typename LabelT>
 template <typename IdType>
-std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const T *query, const LabelT &filter_label,
+std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const T *query, const LabelT &filter_label_unused,
                                                                           const size_t K, const uint32_t L,
                                                                           IdType *indices, float *distances)
 {
@@ -2143,7 +2167,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     {
         throw ANNException("Set L to a value of at least K", -1, __FUNCSIG__, __FILE__, __LINE__);
     }
-
+    LabelT filter_label=_query_labels[0];
     ScratchStoreManager<InMemQueryScratch<T>> manager(_query_scratch);
     auto scratch = manager.scratch_space();
 
@@ -2155,7 +2179,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
         diskann::cout << "Resize completed. New scratch->L is " << scratch->get_L() << std::endl;
     }
 
-    std::vector<LabelT> filter_vec;
+    std::vector<LabelT>& filter_vec=_query_labels;
     std::vector<uint32_t> init_ids = get_init_ids();
 
     std::shared_lock<std::shared_timed_mutex> lock(_update_lock);
@@ -2165,33 +2189,33 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
 
     if (_label_to_start_id.find(filter_label) != _label_to_start_id.end())
     {
-        tsl::robin_set<uint32_t> init_label_st;
-        for (const auto &pair : _label_to_start_id)
-        {
-            init_label_st.insert(pair.second);
-        }
+        // tsl::robin_set<uint32_t> init_label_st;
+        // for (const auto &pair : _label_to_start_id)
+        // {
+        //     init_label_st.insert(pair.second);
+        // }
 
-        auto &best_L_nodes = scratch->best_l_nodes();
-        for (auto v : init_label_st)
-        {
-            float distance = _pq_data_store->get_distance(query, v);
-            Neighbor nn = Neighbor(v, distance);
-            best_L_nodes.insert(nn);
-        }
-        init_label_st.clear();
+        // auto &best_L_nodes = scratch->best_l_nodes();
+        // for (auto v : init_label_st)
+        // {
+        //     float distance = _pq_data_store->get_distance(query, v);
+        //     Neighbor nn = Neighbor(v, distance);
+        //     best_L_nodes.insert(nn);
+        // }
+        // init_label_st.clear();
 
-        for(size_t i=0;i<best_L_nodes.size()&&i<_filtered_medoids;i++){
-            Neighbor& nn = best_L_nodes[i];
-            init_label_st.insert(nn.id);
-        }
+        // for(size_t i=0;i<best_L_nodes.size()&&i<_filtered_medoids;i++){
+        //     Neighbor& nn = best_L_nodes[i];
+        //     init_label_st.insert(nn.id);
+        // }
 
-        // insert all init_ids to map, so that any duplicate is removed. 
-        for (auto v : init_ids)
-            init_label_st.insert(v);
-        init_ids.clear();
-        for (auto v : init_label_st)
-            init_ids.emplace_back(v);
-        scratch->clear();
+        // // insert all init_ids to map, so that any duplicate is removed. 
+        // for (auto v : init_ids)
+        //     init_label_st.insert(v);
+        // init_ids.clear();
+        // for (auto v : init_label_st)
+        //     init_ids.emplace_back(v);
+        // scratch->clear();
         
         init_ids.emplace_back(_label_to_start_id[filter_label]);
     }
@@ -2204,11 +2228,11 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     if (_dynamic_index)
         tl.unlock();
 
-    filter_vec.emplace_back(filter_label);
+    // filter_vec.emplace_back(filter_label);
 
     _data_store->preprocess_query(query, scratch);
     
-    auto retval = iterate_to_fixed_point(scratch, L, init_ids, true, filter_vec, true);
+    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, filter_vec, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
 
