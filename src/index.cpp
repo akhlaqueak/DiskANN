@@ -776,7 +776,7 @@ template <typename T, typename TagT, typename LabelT>
 bool Index<T, TagT, LabelT>::detect_common_filters(uint32_t point_id, bool search_invocation,
                                                    const std::vector<LabelT> &incoming_labels)
 {
-    if(!_is_supervised_point(point_id)) return true;
+    if(!_is_supervised_point.test(point_id)) return true;
     auto &curr_node_labels = _location_to_labels[point_id];
     // Check for intersection between incoming_labels and curr_node_labels
     // using two-pointer approach (both vectors are sorted)
