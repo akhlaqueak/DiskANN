@@ -5,3 +5,152 @@
 /home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn fusion --data_path /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/MLRSNet/label_file.txt --filtered_medoids 4 --trained_filtering 0
 
 /home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn fusion --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/MLRSNet/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/results
+
+
+
+
+
+----------------------------------------
+Running DiskANN pipeline on dataset: clip_vitb32_laion2b
+Data path: /home/exouser/DiskANN/data/MLRSNet
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/MLRSNet/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/MLRSNet/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/MLRSNet/clip_vitb32_laion2b/results
+Finished pipeline for: clip_vitb32_laion2b
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: dinov2-small
+Data path: /home/exouser/DiskANN/data/MLRSNet
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/MLRSNet/dinov2-small’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/MLRSNet/dinov2-small/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/dinov2-small/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/MLRSNet/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/dinov2-small/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/MLRSNet/dinov2-small/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/MLRSNet/dinov2-small/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/MLRSNet/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/MLRSNet/dinov2-small/results
+Finished pipeline for: dinov2-small
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: resnet-50
+Data path: /home/exouser/DiskANN/data/MLRSNet
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/MLRSNet/resnet-50’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/MLRSNet/resnet-50/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/resnet-50/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/MLRSNet/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/MLRSNet/resnet-50/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/MLRSNet/resnet-50/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/MLRSNet/resnet-50/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/MLRSNet/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/MLRSNet/resnet-50/results
+Finished pipeline for: resnet-50
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: all-mpnet
+Data path: /home/exouser/DiskANN/data/aapd
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/aapd/all-mpnet’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/aapd/all-mpnet/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/aapd/all-mpnet/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/aapd/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/aapd/all-mpnet/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/aapd/all-mpnet/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/aapd/all-mpnet/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/aapd/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/aapd/all-mpnet/results
+Finished pipeline for: all-mpnet
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: e5-large
+Data path: /home/exouser/DiskANN/data/aapd
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/aapd/e5-large’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/aapd/e5-large/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/aapd/e5-large/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/aapd/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/aapd/e5-large/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/aapd/e5-large/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/aapd/e5-large/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/aapd/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/aapd/e5-large/results
+Finished pipeline for: e5-large
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: gte-large
+Data path: /home/exouser/DiskANN/data/aapd
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/aapd/gte-large’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/aapd/gte-large/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/aapd/gte-large/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/aapd/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/aapd/gte-large/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/aapd/gte-large/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/aapd/gte-large/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/aapd/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/aapd/gte-large/results
+Finished pipeline for: gte-large
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: all-mpnet
+Data path: /home/exouser/DiskANN/data/goemotions
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/goemotions/all-mpnet’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/goemotions/all-mpnet/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/goemotions/all-mpnet/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/goemotions/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/goemotions/all-mpnet/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/goemotions/all-mpnet/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/goemotions/all-mpnet/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/goemotions/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/goemotions/all-mpnet/results
+Finished pipeline for: all-mpnet
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: e5-large
+Data path: /home/exouser/DiskANN/data/goemotions
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/goemotions/e5-large’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/goemotions/e5-large/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/goemotions/e5-large/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/goemotions/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/goemotions/e5-large/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/goemotions/e5-large/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/goemotions/e5-large/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/goemotions/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/goemotions/e5-large/results
+Finished pipeline for: e5-large
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: clip_vitb32_laion2b
+Data path: /home/exouser/DiskANN/data/goemotions
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/goemotions/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/goemotions/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/goemotions/clip_vitb32_laion2b/results
+Finished pipeline for: clip_vitb32_laion2b
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: dinov2-small
+Data path: /home/exouser/DiskANN/data/goemotions
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/goemotions/dinov2-small’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/goemotions/dinov2-small/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/goemotions/dinov2-small/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/goemotions/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/goemotions/dinov2-small/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/goemotions/dinov2-small/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/goemotions/dinov2-small/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/goemotions/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/goemotions/dinov2-small/results
+Finished pipeline for: dinov2-small
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: gte-large
+Data path: /home/exouser/DiskANN/data/goemotions
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/goemotions/gte-large’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/goemotions/gte-large/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/goemotions/gte-large/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/goemotions/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/goemotions/gte-large/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/goemotions/gte-large/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/goemotions/gte-large/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/goemotions/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/goemotions/gte-large/results
+Finished pipeline for: gte-large
+========================================
+----------------------------------------
+Running DiskANN pipeline on dataset: resnet-50
+Data path: /home/exouser/DiskANN/data/goemotions
+Build path: /home/exouser/DiskANN/build
+----------------------------------------
+[2/3] Building memory index...
+mkdir: cannot create directory ‘/home/exouser/DiskANN/data/goemotions/resnet-50’: File exists
+/home/exouser/DiskANN/build/apps/build_memory_index --data_type float --dist_fn l2 --data_path /home/exouser/DiskANN/data/goemotions/resnet-50/train_embeddings.bin --index_path_prefix /home/exouser/DiskANN/data/goemotions/resnet-50/R32_L50_filtered_index -R 32 --FilteredLbuild 50 --alpha 1.2 --label_file /home/exouser/DiskANN/data/goemotions/label_file.txt --filtered_medoids 4 --trained_filtering 100
+[3/3] Searching memory index...
+/home/exouser/DiskANN/build/apps/search_memory_index --data_type float --dist_fn l2 --index_path_prefix /home/exouser/DiskANN/data/goemotions/resnet-50/R32_L50_filtered_index --query_file /home/exouser/DiskANN/data/goemotions/resnet-50/test_embeddings.bin --gt_file /home/exouser/DiskANN/data/goemotions/resnet-50/ground_truth.bin --query_filters_file /home/exouser/DiskANN/data/goemotions/test_labels.txt -K 10 -L 10 20 50 100 --result_path /home/exouser/DiskANN/data/goemotions/resnet-50/results
+Finished pipeline for: resnet-50
+========================================

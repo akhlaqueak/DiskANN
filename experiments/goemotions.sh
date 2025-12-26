@@ -20,7 +20,7 @@ compute_groundtruth_for_filters() {
 compute_groundtruth() {
     local ds_name=$1
 
-    "$build_path/apps/utils/compute_groundtruth" \
+     "$build_path/apps/utils/compute_groundtruth" \
         --data_type float \
         --dist_fn l2 \
         --base_file "$index_prefix/train_embeddings.bin" \
@@ -37,7 +37,7 @@ build_memory_index() {
     local ds_name=$1
 
     mkdir $index_prefix
-    "$build_path/apps/build_memory_index" \
+    echo "$build_path/apps/build_memory_index" \
         --data_type float \
         --dist_fn $distance \
         --data_path  "$index_prefix/train_embeddings.bin" \
@@ -55,7 +55,7 @@ build_memory_index() {
 # -----------------------------
 search_memory_index() {
     local ds_name=$1
-    "$build_path/apps/search_memory_index" \
+   echo "$build_path/apps/search_memory_index" \
         --data_type float \
         --dist_fn $distance \
         --index_path_prefix "$index_prefix/R32_L50_filtered_index" \

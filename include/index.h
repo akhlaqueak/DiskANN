@@ -376,7 +376,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     // Filter Support
 
     bool _filtered_index = false;
-    size_t _filtered_medoids = 2;
+
 
     // Location to label is only updated during insert_point(), all other reads are protected by
     // default as a location can only be released at end of consolidate deletes
@@ -416,7 +416,8 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     size_t _trained_filtered_index = 10;
     bool _training_stage = false;
     void link_points(std::vector<uint32_t> &visit_order, uint32_t st, uint32_t en);
-
+    size_t _filtered_medoids = 2;
+    boost::dynamic_bitset<> _is_supervised_point;
     // fm: -----------------------------
 
     //

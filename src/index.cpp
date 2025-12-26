@@ -293,6 +293,9 @@ void Index<T, TagT, LabelT>::save(const char *filename, bool compact_before_save
     {
         if (_filtered_index || _trained_filtered_index)
         {
+            std::ofstream supervised_points_writer(std::string(filename) + "_supervised_points.txt");
+            supervised_points_writer << _is_supervised_point;
+            supervised_points_writer.close();
             if (_label_to_start_id.size() > 0)
             {
                 std::ofstream medoid_writer(std::string(filename) + "_labels_to_medoids.txt");
@@ -550,6 +553,13 @@ void Index<T, TagT, LabelT>::load(const char *filename, uint32_t num_threads, ui
     std::string labels_to_medoids = mem_index_file + "_labels_to_medoids.txt";
     std::string labels_map_file = mem_index_file + "_labels_map.txt";
 
+
+    std::string supervised_points_file=mem_index_file + "_supervised_points.txt";
+    if(file_exists(supervised_points_file)){
+        std::ifstream supervised_points_file_reader(supervised_points_file);
+        _is_supervised_point << supervised_points_file_reader;
+    }
+
     if (!_save_as_one_file)
     {
         // For DLVS Store, we will not support saving the index in multiple
@@ -766,6 +776,7 @@ template <typename T, typename TagT, typename LabelT>
 bool Index<T, TagT, LabelT>::detect_common_filters(uint32_t point_id, bool search_invocation,
                                                    const std::vector<LabelT> &incoming_labels)
 {
+    if(!_is_supervised_point(point_id)) return true;
     auto &curr_node_labels = _location_to_labels[point_id];
     // Check for intersection between incoming_labels and curr_node_labels
     // using two-pointer approach (both vectors are sorted)
@@ -1386,6 +1397,10 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     /* visit_order is a vector that is initialized to the entire graph */
     std::vector<uint32_t> visit_order;
     visit_order.reserve(_nd + _num_frozen_pts);
+    _is_supervised_point.resize(_nd + _num_frozen_pts);
+    uint32_t training_batch_size = _trained_filtered_index/100.0 * visit_order.size();
+    std::cout<<"Training batch is: "<<training_batch_size<<" points"<<std::endl;
+
     for (uint32_t i = 0; i < (uint32_t)_nd; i++)
     {
         visit_order.emplace_back(i);
@@ -1403,6 +1418,11 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     // Shuffle the vector
     std::shuffle(visit_order.begin(), visit_order.end(), g);
 
+    for (uint32_t i = 0; i < (uint32_t)visit_order.size(); i++)
+    {
+        if(i<training_batch_size) _is_supervised_point.set(visit_order[i]);
+    }
+
     // if there are frozen points, the first such one is set to be the _start
     if (_num_frozen_pts > 0)
         _start = (uint32_t)_max_points;
@@ -1412,8 +1432,7 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     diskann::Timer link_timer;
     if (_trained_filtered_index)
     {
-        uint32_t training_batch_size = _trained_filtered_index/100.0 * visit_order.size();
-        std::cout<<"Training batch is: "<<training_batch_size<<" points"<<std::endl;
+
         _training_stage = true;
         link_points(visit_order, 0, training_batch_size);
         _training_stage = false;
