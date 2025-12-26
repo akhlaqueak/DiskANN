@@ -1878,8 +1878,8 @@ LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
 
     while (std::getline(iss, tok, ',')) {
         // trim whitespace
-        tok.erase(0, tok.find_first_not_of(" \t\r\n"));
-        tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
+        // tok.erase(0, tok.find_first_not_of(" \t\r\n"));
+        // tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
 
         if (tok.empty()) continue;
 
