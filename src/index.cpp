@@ -2327,9 +2327,9 @@ size_t Index<T, TagT, LabelT>::search_with_tags(const T *query, const uint64_t K
     }
     else
     {
-        std::vector<LabelT> filter_vec;
-        auto converted_label = this->get_converted_label(filter_label);
-        filter_vec.push_back(converted_label);
+        std::vector<LabelT> filter_vec=this->get_converted_label(filter_label);;
+        // auto converted_label = this->get_converted_label(filter_label);
+        // filter_vec.push_back(converted_label);
         iterate_to_fixed_point(scratch, L, init_ids, true, filter_vec, true);
     }
 
