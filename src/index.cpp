@@ -1892,6 +1892,7 @@ LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
     }
 
     std::sort(_query_labels.begin(), _query_labels.end());
+    if(_query_labels.empty())std::cout<<"no label found from "<<raw_label<<std::endl;
     LabelT retval; //returning empty value. 
     return retval;
     // if (_label_map.find(raw_label) != _label_map.end())
