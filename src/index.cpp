@@ -610,8 +610,11 @@ void Index<T, TagT, LabelT>::load(const char *filename, uint32_t num_threads, ui
                 LabelT label;
                 while (std::getline(iss, token, ','))
                 {
-                    token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
-                    token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
+
+        token.erase(0, token.find_first_not_of(" \t\r\n"));
+        token.erase(token.find_last_not_of(" \t\r\n") + 1);
+                    // token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
+                    // token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
                     LabelT token_as_num = (LabelT)std::stoul(token);
                     if (cnt == 0)
                         label = token_as_num;
@@ -1878,8 +1881,8 @@ LabelT Index<T, TagT, LabelT>::get_converted_label(const std::string &raw_label)
 
     while (std::getline(iss, tok, ',')) {
         // trim whitespace
-        // tok.erase(0, tok.find_first_not_of(" \t\r\n"));
-        // tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
+        tok.erase(0, tok.find_first_not_of(" \t\r\n"));
+        tok.erase(tok.find_last_not_of(" \t\r\n") + 1);
 
         if (tok.empty()) continue;
 
@@ -1941,8 +1944,11 @@ void Index<T, TagT, LabelT>::parse_label_file(const std::string &label_file, siz
         std::istringstream new_iss(token);
         while (getline(new_iss, token, ','))
         {
-            token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
-            token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
+
+        token.erase(0, token.find_first_not_of(" \t\r\n"));
+        token.erase(token.find_last_not_of(" \t\r\n") + 1);
+            // token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
+            // token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
             LabelT token_as_num = (LabelT)std::stoul(token);
             lbls.push_back(token_as_num);
             _labels.insert(token_as_num);
