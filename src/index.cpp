@@ -2232,7 +2232,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
 
     _data_store->preprocess_query(query, scratch);
     
-    auto retval = iterate_to_fixed_point(scratch, L, init_ids, true, filter_vec, true);
+    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, filter_vec, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
 
