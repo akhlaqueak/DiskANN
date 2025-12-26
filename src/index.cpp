@@ -557,7 +557,7 @@ void Index<T, TagT, LabelT>::load(const char *filename, uint32_t num_threads, ui
     std::string supervised_points_file=mem_index_file + "_supervised_points.txt";
     if(file_exists(supervised_points_file)){
         std::ifstream supervised_points_file_reader(supervised_points_file);
-        _is_supervised_point << supervised_points_file_reader;
+        supervised_points_file_reader >> _is_supervised_point;
     }
 
     if (!_save_as_one_file)
