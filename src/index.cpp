@@ -2183,7 +2183,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     }
 
     LabelT filter_label=1;
-    if(query_labels.size()) filter_label= _queryque_labels[0];
+    if(query_labels.size()) filter_label= query_labels[0];
     else std::cout<<"no labels found"<<std::endl;
     std::vector<uint32_t> init_ids = get_init_ids();
 
