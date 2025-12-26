@@ -112,7 +112,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     DISKANN_DLLEXPORT void set_universal_label(const LabelT &label);
 
     // Get converted integer label from string to int map (_label_map)
-    DISKANN_DLLEXPORT LabelT get_converted_label(const std::string &raw_label);
+    DISKANN_DLLEXPORT std::vector<LabelT> get_converted_label(const std::string &raw_label);
 
     // Set starting point of an index before inserting any points incrementally.
     // The data count should be equal to _num_frozen_pts * _aligned_dim.
@@ -141,7 +141,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
 
     // Filter support search
     template <typename IndexType>
-    DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t> search_with_filters(const T *query, const LabelT &filter_label,
+    DISKANN_DLLEXPORT std::pair<uint32_t, uint32_t> search_with_filters(const T *query, const std::vector<LabelT> &filter_label,
                                                                         const size_t K, const uint32_t L,
                                                                         IndexType *indices, float *distances);
 
@@ -377,7 +377,7 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
 
     bool _filtered_index = false;
     size_t _filtered_medoids = 2;
-    std::vector<LabelT> _query_labels;
+
     // Location to label is only updated during insert_point(), all other reads are protected by
     // default as a location can only be released at end of consolidate deletes
     std::vector<std::vector<LabelT>> _location_to_labels;
