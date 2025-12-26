@@ -245,7 +245,7 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
             if (it != filter_map.end())
                 lbls.push_back(it->second);
             else
-                std::cout << "label not found " << it->second<< std::endl;
+                std::cout << "label not found " << it->second << std::endl;
         }
 
         std::sort(lbls.begin(), lbls.end());
