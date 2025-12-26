@@ -2167,7 +2167,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     {
         throw ANNException("Set L to a value of at least K", -1, __FUNCSIG__, __FILE__, __LINE__);
     }
-    LabelT filter_label=_query_labels[0];
+
     ScratchStoreManager<InMemQueryScratch<T>> manager(_query_scratch);
     auto scratch = manager.scratch_space();
 
@@ -2179,7 +2179,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
         diskann::cout << "Resize completed. New scratch->L is " << scratch->get_L() << std::endl;
     }
 
-    std::vector<LabelT>& filter_vec=_query_labels;
+    LabelT filter_label = _query_labels[0];
     std::vector<uint32_t> init_ids = get_init_ids();
 
     std::shared_lock<std::shared_timed_mutex> lock(_update_lock);
@@ -2221,18 +2221,18 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     }
     else
     {
-        diskann::cout << "No filtered medoid found. exitting "
+        diskann::cout << "No filtered medoid found. exitting "<< filter_label
                       << std::endl; // RKNOTE: If universal label found start there
         throw diskann::ANNException("No filtered medoid found. exitting ", -1);
     }
     if (_dynamic_index)
         tl.unlock();
 
-    // filter_vec.emplace_back(filter_label);
+
 
     _data_store->preprocess_query(query, scratch);
     
-    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, filter_vec, true);
+    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, _query_labels, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
 
