@@ -304,7 +304,7 @@ int main(int argc, char **argv)
     float fail_if_recall_below = 0.0f;
 
     po::options_description desc{
-       atuo st= program_options_utils::make_program_description("search_memory_index", "Searches in-memory DiskANN indexes")};
+       auto st= program_options_utils::make_program_description("search_memory_index", "Searches in-memory DiskANN indexes")};
     try
     {
         desc.add_options()("help,h", "Print this information on arguments");
