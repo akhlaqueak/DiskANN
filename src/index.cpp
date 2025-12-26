@@ -1397,9 +1397,7 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     /* visit_order is a vector that is initialized to the entire graph */
     std::vector<uint32_t> visit_order;
     visit_order.reserve(_nd + _num_frozen_pts);
-    _is_supervised_point.resize(_nd + _num_frozen_pts);
-    uint32_t training_batch_size = _trained_filtered_index/100.0 * visit_order.size();
-    std::cout<<"Training batch is: "<<training_batch_size<<" points"<<std::endl;
+
 
     for (uint32_t i = 0; i < (uint32_t)_nd; i++)
     {
@@ -1418,6 +1416,9 @@ template <typename T, typename TagT, typename LabelT> void Index<T, TagT, LabelT
     // Shuffle the vector
     std::shuffle(visit_order.begin(), visit_order.end(), g);
 
+    _is_supervised_point.resize(_nd + _num_frozen_pts);
+    uint32_t training_batch_size = _trained_filtered_index/100.0 * visit_order.size();
+    std::cout<<"Training batch is: "<<training_batch_size<<" points"<<std::endl;
     for (uint32_t i = 0; i < (uint32_t)visit_order.size(); i++)
     {
         if(i<training_batch_size) _is_supervised_point.set(visit_order[i]);
