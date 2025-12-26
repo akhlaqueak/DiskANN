@@ -193,8 +193,10 @@ inline void convert_labels_string_to_int(const std::string &inFileName, const st
         std::vector<uint32_t> lbls;
         while (getline(new_iss, token, ','))
         {
-            token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
-            token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
+            token.erase(0, token.find_first_not_of(" \t\r\n"));
+            token.erase(token.find_last_not_of(" \t\r\n") + 1);
+            // token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
+            // token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
             if (string_int_map.find(token) == string_int_map.end())
             {
                 uint32_t nextId = (uint32_t)string_int_map.size() + 1;
