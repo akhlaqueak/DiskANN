@@ -998,7 +998,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         compute_dists(id_scratch, dist_scratch);
         cmps += (uint32_t)id_scratch.size();
 
-        auto jaccard_distance = [&](const auto& a, const auto& b) {
+        double jaccard_distance = [&](const auto& a, const auto& b) {
             if (a.empty() && b.empty())
                 return 0.0;
         
@@ -1022,12 +1022,23 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             return 1.0 - static_cast<double>(intersection) / uni;
         };
         
-
         if(use_filter && _dist_metric==diskann::Metric::FUSION)
         {
+            bool hamming = false; // selects hamming or jaccard
+
             for (size_t m = 0; m < id_scratch.size(); ++m)
             {
-                bool f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
+                double f = 0;
+                if (hamming){
+                    f = (!detect_common_filters(id_scratch[m], search_invocation, filter_labels));
+                }
+                else{
+                    uint32_t point_id = id_scratch[m];
+                    if(_is_supervised_point.test(point_id)){
+                        auto &node_labels = _location_to_labels[point_id];
+                        f = jaccard_distance(filter_labels, node_labels);
+                    }
+                }
                 dist_scratch[m]=0.25*dist_scratch[m]+f;
             }
         }
