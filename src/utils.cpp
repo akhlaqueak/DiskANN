@@ -239,7 +239,6 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
         {
             token.erase(0, token.find_first_not_of(" \t\r\n"));
             token.erase(token.find_last_not_of(" \t\r\n") + 1); 
-            std::cout<<token<<std::endl;
             // token.erase(std::remove(token.begin(), token.end(), '\n'), token.end());
             // token.erase(std::remove(token.begin(), token.end(), '\r'), token.end());
             auto it = filter_map.find(token);
@@ -249,8 +248,8 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
                 std::cout << "label not found " << it->second << std::endl;
         }
 
-        std::sort(lbls.begin(), lbls.end());
-        location_to_labels.emplace_back(lbls);
+        // std::sort(lbls.begin(), lbls.end());
+        // location_to_labels.emplace_back(lbls);
     }
 }
 
