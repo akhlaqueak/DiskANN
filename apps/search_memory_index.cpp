@@ -44,11 +44,8 @@ int search_memory_index(diskann::Metric &metric, const std::string &index_path, 
 
     std::vector<std::vector<LabelT>> location_to_labels, query_location_to_labels;
     std::unordered_map<std::string, LabelT> filter_map;
-    std::cout<<"passed 1"<<std::endl;
     diskann::parse_label_file(index_path, location_to_labels, filter_map);
-    std::cout<<"passed 2"<<std::endl;
     diskann::convert_query_raw_labels(query_filters, filter_map, query_location_to_labels);
-    std::cout<<"passed 3"<<std::endl;
 
     bool calc_recall_flag = false;
     if (truthset_file != std::string("null") && file_exists(truthset_file))
