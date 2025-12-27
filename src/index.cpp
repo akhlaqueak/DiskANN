@@ -2202,22 +2202,21 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
         diskann::cout << "Resize completed. New scratch->L is " << scratch->get_L() << std::endl;
     }
 
-    LabelT filter_label=1;
-    if(query_labels.size()) filter_label= query_labels[0];
-    else std::cout<<"no labels found"<<std::endl;
-    std::vector<uint32_t> init_ids = get_init_ids();
+    std::vector<uint32_t> init_ids = get_init_ids(); // adds medoid
+
+    for(const LabelT& lbl: query_labels)
+        if (_label_to_start_id.find(lbl) != _label_to_start_id.end())
+            init_ids.emplace_back(_label_to_start_id[lbl]);
+    
 
     std::shared_lock<std::shared_timed_mutex> lock(_update_lock);
     std::shared_lock<std::shared_timed_mutex> tl(_tag_lock, std::defer_lock);
     if (_dynamic_index)
         tl.lock();
 
-    if (_label_to_start_id.find(filter_label) != _label_to_start_id.end())
     {
-        tsl::robin_set<uint32_t> init_label_st;
-        init_ids.emplace_back(_label_to_start_id[filter_label]);
-
         // adding _filtered_medoids number of other medoids nearsest to query label as starting point.
+        tsl::robin_set<uint32_t> init_label_st;
         for (const auto &pair : _label_to_start_id)
         {
             init_label_st.insert(pair.second);
@@ -2254,8 +2253,6 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
     }
     if (_dynamic_index)
         tl.unlock();
-
-
 
     _data_store->preprocess_query(query, scratch);
     
