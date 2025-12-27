@@ -998,6 +998,31 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         compute_dists(id_scratch, dist_scratch);
         cmps += (uint32_t)id_scratch.size();
 
+        auto jaccard_distance = [&](const auto& a, const auto& b) {
+            if (a.empty() && b.empty())
+                return 0.0;
+        
+            size_t intersection = 0;
+            auto it1 = a.begin();
+            auto it2 = b.begin();
+        
+            while (it1 != a.end() && it2 != b.end()) {
+                if (*it1 == *it2) {
+                    ++intersection;
+                    ++it1;
+                    ++it2;
+                } else if (*it1 < *it2) {
+                    ++it1;
+                } else {
+                    ++it2;
+                }
+            }
+        
+            size_t uni = a.size() + b.size() - intersection;
+            return 1.0 - static_cast<double>(intersection) / uni;
+        };
+        
+
         if(use_filter && _dist_metric==diskann::Metric::FUSION)
         {
             for (size_t m = 0; m < id_scratch.size(); ++m)
