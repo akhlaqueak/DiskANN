@@ -998,7 +998,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         compute_dists(id_scratch, dist_scratch);
         cmps += (uint32_t)id_scratch.size();
 
-        double jaccard_distance = [&](const auto& a, const auto& b) {
+        double jaccard_distance = [](const auto& a, const auto& b) {
             if (a.empty() && b.empty())
                 return 0.0;
         
