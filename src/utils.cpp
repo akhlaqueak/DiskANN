@@ -235,9 +235,9 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
     for (std::string q_labels : query_filters)
     {
         std::vector<LabelT> lbls;
-        while (getline(new_iss, token, ','))
-    std::cout<<"pass 5"<<std::endl;
-    std::istringstream new_iss(q_labels);
+        std::istringstream new_iss(q_labels);
+    std::cout<<"pass 4"<<std::endl;
+    while (getline(new_iss, token, ','))
         {
             token.erase(0, token.find_first_not_of(" \t\r\n"));
             token.erase(token.find_last_not_of(" \t\r\n") + 1);
@@ -249,7 +249,6 @@ void convert_query_raw_labels(const std::vector<std::string> &query_filters,
             else
                 std::cout << "label not found " << it->second << std::endl;
         }
-        std::cout<<"pass 6"<<std::endl;
 
         std::sort(lbls.begin(), lbls.end());
         location_to_labels.emplace_back(lbls);
