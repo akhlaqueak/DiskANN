@@ -2186,6 +2186,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
                                                                           const size_t K, const uint32_t L,
                                                                           IdType *indices, float *distances)
 {
+    bool use_query_filters = false;
     if (K > (uint64_t)L)
     {
         throw ANNException("Set L to a value of at least K", -1, __FUNCSIG__, __FILE__, __LINE__);
@@ -2204,9 +2205,11 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
 
     std::vector<uint32_t> init_ids = get_init_ids(); // adds medoid
 
-    for(const LabelT& lbl: query_labels)
+    if(use_query_filters){
+        for(const LabelT& lbl: query_labels)
         if (_label_to_start_id.find(lbl) != _label_to_start_id.end())
-            init_ids.emplace_back(_label_to_start_id[lbl]);
+        init_ids.emplace_back(_label_to_start_id[lbl]);
+    }
     
 
     std::shared_lock<std::shared_timed_mutex> lock(_update_lock);
@@ -2256,7 +2259,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
 
     _data_store->preprocess_query(query, scratch);
     
-    auto retval = iterate_to_fixed_point(scratch, L, init_ids, false, query_labels, true);
+    auto retval = iterate_to_fixed_point(scratch, L, init_ids, use_query_filters, query_labels, true);
 
     auto best_L_nodes = scratch->best_l_nodes();
 
