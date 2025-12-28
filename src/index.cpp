@@ -1024,7 +1024,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
         
         if(use_filter && _dist_metric==diskann::Metric::FUSION)
         {
-            bool hamming = false; // selects hamming or jaccard
+            bool hamming = true; // selects hamming or jaccard
 
             for (size_t m = 0; m < id_scratch.size(); ++m)
             {
