@@ -881,7 +881,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             throw diskann::ANNException(std::string("Wrong loc") + std::to_string(id), -1, __FUNCSIG__, __FILE__,
                                         __LINE__);
         }
-        if(!_dist_metric==diskann::Metric::FUSION) // 
+        // if(!_dist_metric==diskann::Metric::FUSION) // 
         if (use_filter)
         {
             if (!detect_common_filters(id, search_invocation, filter_labels))
