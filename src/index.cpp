@@ -967,7 +967,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::iterate_to_fixed_point(
             {
                 assert(id < _max_points + _num_frozen_pts);
 
-                if(!_dist_metric==diskann::Metric::FUSION)
+                if(!_dist_metric==diskann::Metric::FUSION) // without intersection if active
                 if (use_filter)
                 {
                     // NOTE: NEED TO CHECK IF THIS CORRECT WITH NEW LOCKS.
@@ -2222,7 +2222,7 @@ std::pair<uint32_t, uint32_t> Index<T, TagT, LabelT>::search_with_filters(const 
                                                                           const size_t K, const uint32_t L,
                                                                           IdType *indices, float *distances)
 {
-    bool use_query_filters = false;
+    bool use_query_filters = true;
     if (K > (uint64_t)L)
     {
         throw ANNException("Set L to a value of at least K", -1, __FUNCSIG__, __FILE__, __LINE__);
